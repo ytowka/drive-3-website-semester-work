@@ -1,0 +1,5 @@
+rootProject.name = 'car-configurator-gradle'
+include 'domain'
+include 'webapp'
+include 'data'
+
