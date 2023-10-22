@@ -1,8 +1,11 @@
 package org.danilkha.dto;
 
+import java.util.UUID;
+
 public record UserDto(
-        long id,
+        UUID id,
         String name,
-        String email
-) {
-}
+        String email,
+        String avatarUri,
+        boolean isEmailConfirmed
+){ }

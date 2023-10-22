@@ -1,2 +1,11 @@
 group = 'org.danilkha'
 version = '1.0-SNAPSHOT'
+
+
+allprojects {
+    plugins.withType(JavaPlugin){
+        dependencies {
+            implementation 'org.jetbrains:annotations:24.0.0'
+        }
+    }
+}

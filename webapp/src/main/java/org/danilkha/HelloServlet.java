@@ -2,6 +2,8 @@ package org.danilkha;
 
 import org.danilkha.repos.UserRepository;
 
+import javax.servlet.AsyncContext;
+import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +14,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@WebServlet(name = "helloServlet", value = "/hello-servlet")
+@WebServlet(name = "helloServlet", value = "/hello", asyncSupported = true)
 public class HelloServlet extends HttpServlet {
     private String message;
 
@@ -33,20 +35,38 @@ public class HelloServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-    private UserRepository repository= new UserRepositoryImpl(getConnection());
+    //private UserRepository repository= new UserRepositoryImpl(getConnection());
 
     public void init() {
         message = "Hello World!";
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/html");
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        AsyncContext asyncContext = req.startAsync(req, resp);
+
+        new Thread(() ->{
+
+            ServletResponse response = asyncContext.getResponse();
+            PrintWriter out = null;
+            try {
+                out = response.getWriter();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            out.println("<html><body>");
+            out.println("<h1>" + message +this.hashCode() + "</h1>");
+            out.println("</body></html>");
+
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            asyncContext.complete();
+        }).start();
 
         // Hello
-        PrintWriter out = response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>" + message + "</h1>");
-        out.println("</body></html>");
+
     }
 
     public void destroy() {
