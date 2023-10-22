@@ -120,6 +120,8 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                             null
                     )
             );
+            String userEmail = userDao.getById(userId).email();
+            emailSender.sendEmail(userEmail, "password reset link: "+code,"password reset");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -162,6 +164,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
                     code,
                     null
             ));
+            emailSender.sendEmail(email, "password reset link: "+code,"password reset");
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);

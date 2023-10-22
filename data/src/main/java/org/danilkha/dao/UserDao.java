@@ -14,6 +14,8 @@ public interface UserDao {
 
     UserEntity getByEmail(String email) throws SQLException;
 
+    UserEntity getById(UUID uuid) throws SQLException;
+
     UUID create(UserEntity userEntity) throws SQLException;
 
     boolean update(UserEntity userEntity) throws SQLException;
@@ -33,7 +35,9 @@ public interface UserDao {
         //language=SQL
         private static final String UPDATE_PASSWORD_QUERY = "UPDATE account SET password_hash = ? where id = ?";
         //language=SQL
-        private static final String SELECT_QUERY = "SELECT * FROM account WHERE email = ?";
+        private static final String SELECT_BY_EMAIL_QUERY = "SELECT * FROM account WHERE email = ?";
+        //language=SQL
+        private static final String SELECT_QUERY = "SELECT * FROM account WHERE id = ?";
 
         //language=SQL
         private static final String DELETE_QUERY = "DELETE FROM account WHERE id = ?";
@@ -45,11 +49,22 @@ public interface UserDao {
 
         @Override
         public UserEntity getByEmail(String email) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_QUERY);
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_BY_EMAIL_QUERY);
             statement.setString(1, email);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
                return ORM.parseResultSet(resultSet, UserEntity.class);
+            }
+            return null;
+        }
+
+        @Override
+        public UserEntity getById(UUID uuid) throws SQLException {
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_BY_EMAIL_QUERY);
+            statement.setObject(1, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return ORM.parseResultSet(resultSet, UserEntity.class);
             }
             return null;
         }
