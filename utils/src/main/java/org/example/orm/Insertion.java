@@ -10,9 +10,9 @@ import java.util.List;
 
 import static org.example.orm.ORM.appendValues;
 
-public class Update {
+public class Insertion {
 
-    public static <T> PreparedStatement prepareUpdateStatement(Connection connection, T object) throws SQLException {
+    public static <T> PreparedStatement prepareInsertStatement(Connection connection, T object) throws SQLException {
 
         StringBuilder stringBuilder = new StringBuilder();
 

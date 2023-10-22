@@ -1,7 +1,5 @@
 package org.danilkha;
 
-import org.danilkha.repos.UserRepository;
-
 import javax.servlet.AsyncContext;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;

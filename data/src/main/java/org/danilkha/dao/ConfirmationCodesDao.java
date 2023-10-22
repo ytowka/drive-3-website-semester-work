@@ -19,7 +19,9 @@ public interface ConfirmationCodesDao {
 
     class Impl implements ConfirmationCodesDao{
         //language=SQL
-        private static final String INSERT_QUERY = "INSERT INTO email_confirmation_codes (account_id, code) VALUES(?, ?)";
+        private static final String INSERT_QUERY = "" +
+                "INSERT INTO email_confirmation_codes (account_id, code) VALUES(?, ?)" +
+                " ON CONFLICT (account_id) DO UPDATE SET code = ?, creation_time = now()";
 
         //language=SQL
         private static final String SELECT_QUERY = "SELECT * FROM email_confirmation_codes WHERE account_id = ?";
@@ -37,7 +39,7 @@ public interface ConfirmationCodesDao {
         @Override
         public ConfirmationCodeEntity getById(UUID userId) throws SQLException {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_QUERY);
-            statement.setString(1, userId.toString());
+            statement.setObject(1, userId);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
             if(resultSet.next()){
@@ -49,8 +51,10 @@ public interface ConfirmationCodesDao {
         @Override
         public boolean create(ConfirmationCodeEntity confirmationCodeEntity) throws SQLException {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(INSERT_QUERY);
-            statement.setString(1, confirmationCodeEntity.userId().toString());
+            statement.setObject(1, confirmationCodeEntity.userId());
             statement.setInt(2, confirmationCodeEntity.code());
+            statement.setInt(3, confirmationCodeEntity.code());
+            System.out.println(statement.toString());
             int result = statement.executeUpdate();
             return result > 0;
         }
@@ -58,7 +62,7 @@ public interface ConfirmationCodesDao {
         @Override
         public boolean delete(UUID uuid) throws SQLException {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(DELETE_QUERY);
-            statement.setString(1, uuid.toString());
+            statement.setObject(1, uuid);
             int result = statement.executeUpdate();
             return result > 0;
         }

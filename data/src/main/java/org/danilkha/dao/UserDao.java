@@ -2,6 +2,7 @@ package org.danilkha.dao;
 
 import org.danilkha.ConnectionProvider;
 import org.danilkha.entities.UserEntity;
+import org.example.orm.Insertion;
 import org.example.orm.ORM;
 
 import java.sql.PreparedStatement;
@@ -21,15 +22,16 @@ public interface UserDao {
 
     void confirmEmail(UUID uuid) throws SQLException;
 
-    class Impl implements UserDao{
+    void updatePassword(UUID uuid, String newPasswordHash) throws SQLException;
 
-        //language=SQL
-        private static final String INSERT_QUERY = "INSERT INTO account (password_hash, email, username) VALUES(?, ?, ?) RETURNING id";
+    class Impl implements UserDao{
 
         //language=SQL
         private static final String UPDATE_QUERY = "UPDATE account SET (password_hash, email, username, is_email_confirmed) = (?, ?, ?, ?) WHERE id = ?";
         //language=SQL
-        private static final String UPDATE_CONFIRM_QUERY = "UPDATE account SET (is_email_confirmed) = (TRUE)";
+        private static final String UPDATE_CONFIRM_QUERY = "UPDATE account SET is_email_confirmed = TRUE where id = ?";
+        //language=SQL
+        private static final String UPDATE_PASSWORD_QUERY = "UPDATE account SET password_hash = ? where id = ?";
         //language=SQL
         private static final String SELECT_QUERY = "SELECT * FROM account WHERE email = ?";
 
@@ -37,7 +39,7 @@ public interface UserDao {
         private static final String DELETE_QUERY = "DELETE FROM account WHERE id = ?";
 
         private final ConnectionProvider connectionProvider;
-        Impl(ConnectionProvider connectionProvider){
+        public Impl(ConnectionProvider connectionProvider){
             this.connectionProvider = connectionProvider;
         }
 
@@ -54,10 +56,7 @@ public interface UserDao {
 
         @Override
         public UUID create(UserEntity userEntity) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(INSERT_QUERY);
-            statement.setString(1, userEntity.encodedPasswordHash());
-            statement.setString(2, userEntity.email());
-            statement.setString(3, userEntity.userName());
+            PreparedStatement statement = Insertion.prepareInsertStatement(connectionProvider.provide(), userEntity);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
             if(resultSet.next()){
@@ -73,7 +72,7 @@ public interface UserDao {
             statement.setString(2, userEntity.email());
             statement.setString(3, userEntity.userName());
             statement.setBoolean(4, userEntity.isEmailConfirmed());
-            statement.setString(5, userEntity.id().toString());
+            statement.setObject(5, userEntity.id());
             int result = statement.executeUpdate();
             return result > 0;
         }
@@ -81,7 +80,7 @@ public interface UserDao {
         @Override
         public boolean delete(UUID uuid) throws SQLException {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(DELETE_QUERY);
-            statement.setString(1, uuid.toString());
+            statement.setObject(1, uuid);
             int result = statement.executeUpdate();
             return result > 0;
         }
@@ -89,7 +88,16 @@ public interface UserDao {
         @Override
         public void confirmEmail(UUID uuid) throws SQLException {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(UPDATE_CONFIRM_QUERY);
+            statement.setObject(1, uuid);
             statement.executeUpdate();
+        }
+
+        @Override
+        public void updatePassword(UUID uuid, String newPasswordHash) throws SQLException {
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(UPDATE_PASSWORD_QUERY);
+            statement.setString(1, newPasswordHash);
+            statement.setObject(2, uuid);
+            statement.execute();
         }
     }
 }

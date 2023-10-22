@@ -6,18 +6,23 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public interface UserRepository {
+public interface AuthenticationRepository {
 
 
     /**
      *
-     * @param userDto y
+     * @param name
+     * @param email
+     * @param avatarUri
      * @param password
-     * @return
+     * @return UserDto object if account was successfully created
      * @throws SQLException
      */
     @Nullable
-    UUID registerUser(UserDto userDto, String password) throws SQLException;
+    UserDto registerUser(String name,
+                         String email,
+                         String avatarUri,
+                         String password);
 
 
     /**
@@ -28,16 +33,16 @@ public interface UserRepository {
      * @throws SQLException
      */
     @Nullable
-    UserDto authUser(String email, String password) throws SQLException;
+    UserDto authUser(String email, String password);
 
     /**
      *
      * @param userId user id
      * @param code email confirmation code
-     * @return true if email was successfully confirmed
+     * @return true if email was successfully confirmed, false if code is wrong or expired
      * @throws SQLException
      */
-    boolean confirmEmail(UUID userId, int code) throws SQLException;
+    boolean confirmEmail(UUID userId, int code);
 
 
     /**
@@ -45,16 +50,15 @@ public interface UserRepository {
      * @param userId user id
      * @throws SQLException
      */
-    void sendEmailConfirmationCode(UUID userId) throws SQLException;
+    void sendEmailConfirmationCode(UUID userId);
 
     /**
-     * @param userId user id
      * @param link confirmation link
      * @param newPassword new password
-     * @return true if password was changed, false if link is invalid
+     * @return true if password was changed, false if link is invalid or expired
      * @throws SQLException
      */
-    boolean resetPassword(UUID userId, String link, String newPassword) throws SQLException;
+    boolean resetPassword(String link, String newPassword);
 
     /**
      *
@@ -62,5 +66,5 @@ public interface UserRepository {
      * @return true if reset link was successfully sent, false if there is no account with such email
      * @throws SQLException
      */
-    boolean requestPasswordReset(String email) throws SQLException;
+    boolean requestPasswordReset(String email);
 }
