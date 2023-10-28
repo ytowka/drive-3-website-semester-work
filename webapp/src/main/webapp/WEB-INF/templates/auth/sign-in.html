@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><link href="styles.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <title>Title</title>
+</head>
+<body>
+<!-- Section: Design Block -->
+<div class="main-content">
+    <div class="card">
+        <form id="registration-form">
+            <div style=" grid-column-start: 1; grid-column-end: 3; display: flex; justify-content: center">
+                <div class="profile-container">
+                    <img src="photo.svg" alt="Profile Picture" id="profile-picture" onclick="openFileSelector()">
+                    <input type="file" name="picture" id="profile-image-input" accept="image/*" onchange="previewImage(event)">
+                    <img src="cancel.svg" id="clear-button" onclick="clearImage()"  alt="sf">
+                </div>
+            </div>
+            <label>
+                Имя пользователя
+                <input name="name">
+            </label>
+            <label class="left-column">
+                Имя
+                <input name="surname">
+            </label>
+
+            <label class="right-column">
+                Фамилия
+                <input name="username">
+            </label>
+            <label>
+                Эл. почта
+                <input name="email" type="email">
+            </label>
+            <label>
+                Пароль
+                <input name="password" type="password">
+            </label>
+            <label>
+                Повтор пароля
+                <input name="password-repeat" type="password">
+            </label>
+            <div style=" grid-column-start: 1; grid-column-end: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px">
+                <label style="display: flex; flex-direction: row; width: 100%; justify-content: center; align-items: center">
+                    <input type="checkbox" style="width: 20px; height: 20px;">
+                    Запомнить меня
+                </label>
+                <button name="submit">Создать аккаунт</button>
+                <a href="">Войти в аккаунт</a>
+            </div>
+        </form>
+    </div>
+    <script src="scripts.js"></script>
+</div>
+<!-- Section: Design Block -->
+</body>
+</html>

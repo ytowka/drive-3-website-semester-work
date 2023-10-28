@@ -1,4 +1,4 @@
-package org.danilkha.repos;
+package org.danilkha.services;
 
 import org.danilkha.dto.UserDto;
 import org.jetbrains.annotations.Nullable;
@@ -6,11 +6,10 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.UUID;
 
-public interface AuthenticationRepository {
+public interface AuthenticationService {
 
 
     /**
-     *
      * @param name
      * @param email
      * @param avatarUri

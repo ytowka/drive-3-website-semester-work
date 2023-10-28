@@ -4,8 +4,8 @@ import org.danilkha.dao.ConfirmationCodesDao;
 import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.dao.UserDao;
 import org.danilkha.dto.UserDto;
-import org.danilkha.repo.AuthenticationRepositoryImpl;
-import org.danilkha.repos.AuthenticationRepository;
+import org.danilkha.service.AuthenticationServiceImpl;
+import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.CodeGenerator;
 import org.danilkha.utils.EmailSender;
 import org.danilkha.utils.PasswordEncoder;
@@ -37,7 +37,7 @@ public class Main {
         CodeGenerator codeGenerator = new CodeGenerator();
         EmailSender emailSender = new EmailSender();
 
-        AuthenticationRepository authenticationRepository = new AuthenticationRepositoryImpl(
+        AuthenticationService authenticationService = new AuthenticationServiceImpl(
                 userDao, confirmationCodesDao, passwordResetCodesDao, passwordEncoder, 1, 1, codeGenerator, emailSender
         );
 
@@ -51,7 +51,7 @@ public class Main {
                     String email = in.nextLine();
                     System.out.println("password: ");
                     String password = in.nextLine();
-                    UserDto userDto = authenticationRepository.authUser(email, password);
+                    UserDto userDto = authenticationService.authUser(email, password);
                     System.out.println(userDto);
                 }
                 case "reg" ->{
@@ -63,7 +63,7 @@ public class Main {
                     String avatarUri = in.nextLine();
                     System.out.println("password: ");
                     String password = in.nextLine();
-                    UserDto userDto = authenticationRepository.registerUser(name, email, avatarUri, password);
+                    UserDto userDto = authenticationService.registerUser(name, email, avatarUri, password);
                     System.out.println(userDto);
                 }
                 case "confEmail" ->{
@@ -71,18 +71,18 @@ public class Main {
                     String uuid = in.nextLine();
                     System.out.println("code: ");
                     String code = in.nextLine();
-                    boolean confirmEmail = authenticationRepository.confirmEmail(UUID.fromString(uuid), Integer.parseInt(code));
+                    boolean confirmEmail = authenticationService.confirmEmail(UUID.fromString(uuid), Integer.parseInt(code));
                     System.out.println(confirmEmail);
                 }
                 case "reqConfEmail" ->{
                     System.out.println("uuid: ");
                     String uuid = in.nextLine();
-                    authenticationRepository.sendEmailConfirmationCode(UUID.fromString(uuid));
+                    authenticationService.sendEmailConfirmationCode(UUID.fromString(uuid));
                 }
                 case "reqResetPassword" ->{
                     System.out.println("email: ");
                     String email = in.nextLine();
-                    boolean result = authenticationRepository.requestPasswordReset(email);
+                    boolean result = authenticationService.requestPasswordReset(email);
                     System.out.println(result);
                 }
                 case "resetPassword" ->{
@@ -90,7 +90,7 @@ public class Main {
                     String link = in.nextLine();
                     System.out.println("new password: ");
                     String password = in.nextLine();
-                    boolean result = authenticationRepository.resetPassword(link, password);
+                    boolean result = authenticationService.resetPassword(link, password);
                     System.out.println(result);
                 }
                 default -> {

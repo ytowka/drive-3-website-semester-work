@@ -3,4 +3,6 @@ include 'domain'
 include 'data'
 include 'webapp'
 include 'utils'
+include 'feature.authorization'
+include 'feature.profile'
 

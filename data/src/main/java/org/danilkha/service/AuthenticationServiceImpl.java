@@ -1,4 +1,4 @@
-package org.danilkha.repo;
+package org.danilkha.service;
 
 import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.entities.PasswordResetLinkEntity;
@@ -10,14 +10,14 @@ import org.danilkha.dao.UserDao;
 import org.danilkha.dto.UserDto;
 import org.danilkha.entities.ConfirmationCodeEntity;
 import org.danilkha.entities.UserEntity;
-import org.danilkha.repos.AuthenticationRepository;
+import org.danilkha.services.AuthenticationService;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
 
-public class AuthenticationRepositoryImpl implements AuthenticationRepository {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserDao userDao;
     private final ConfirmationCodesDao confirmationCodesDao;
@@ -31,7 +31,7 @@ public class AuthenticationRepositoryImpl implements AuthenticationRepository {
     private final int emailConfirmationCodeAgeMinutes;
     private final int passwordResetCodeAgeMinutes;
 
-    public AuthenticationRepositoryImpl(
+    public AuthenticationServiceImpl(
             UserDao userDao,
             ConfirmationCodesDao confirmationCodesDao,
             PasswordResetCodesDao passwordResetCodesDao, PasswordEncoder passwordEncoder,

@@ -13,6 +13,7 @@ dependencies {
     implementation project(':domain')
     implementation project(':utils')
 
+    implementation 'org.apache.commons:commons-dbcp2:2.9.0'
     implementation 'org.postgresql:postgresql:42.6.0'
     implementation 'com.sun.mail:javax.mail:1.6.2'
 

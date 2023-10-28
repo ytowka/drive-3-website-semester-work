@@ -21,6 +21,8 @@ tasks.withType(JavaCompile) {
 dependencies {
     compileOnly('javax.servlet:javax.servlet-api:4.0.1')
 
+    implementation('org.freemarker:freemarker:2.3.32')
+
     implementation project(':domain')
     implementation project(':data')
 
