@@ -1,4 +1,5 @@
 <#-- @ftlvariable name="contextPath" type="java.lang.String" -->
+<#-- @ftlvariable name="usernameRegexPattern" type="java.lang.String" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +15,7 @@
 <!-- Section: Design Block -->
 <script >
     const contextPath = "${contextPath}"
+    const usernameRegexPattern = "${usernameRegexPattern}"
 </script>
 <div class="main-content">
     <div class="card">

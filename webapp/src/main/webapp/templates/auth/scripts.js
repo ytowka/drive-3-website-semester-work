@@ -4,7 +4,7 @@ function openFileSelector() {
 }
 
 let uploadPicture = false;
-
+const usernameRe = new RegExp(usernameRegexPattern);
 const maxFileSize = 1024*1024
 
 function previewImage(event) {
@@ -66,17 +66,21 @@ function processForm(e) {
     const isNameLengthOutOfRange = name.length < 2 || username.length > 50
     const isSurnameLengthOutOfRange = surname.length < 2 || username.length > 50
 
+    const isUserNameNotValid = !usernameRe.test(username)
+
     setVisible(passwordRepeatErrorLabel, isPasswordRepeatWrong)
     setVisible(passwordErrorLabel, isPasswordToShort)
-    setVisible(usernameErrorLabel, isUserNameLengthOutOfRange)
+    setVisible(usernameErrorLabel, isUserNameLengthOutOfRange || isUserNameNotValid)
     setVisible(nameErrorLabel, isNameLengthOutOfRange)
     setVisible(surnameErrorLabel, isSurnameLengthOutOfRange)
 
     if(isUserNameLengthOutOfRange){
         usernameErrorLabel.innerText = "имя пользователя слишком короткое или слишком длинное"
+    }else if(isUserNameNotValid){
+        usernameErrorLabel.innerText = "имя пользователя не может содержать пробелы, только символы английского алфавиты, цифры или _ -"
     }
 
-    const haveErrors = isPasswordToShort || isPasswordRepeatWrong || isUserNameLengthOutOfRange || isNameLengthOutOfRange || isSurnameLengthOutOfRange
+    const haveErrors = isPasswordToShort || isPasswordRepeatWrong || isUserNameLengthOutOfRange || isNameLengthOutOfRange || isSurnameLengthOutOfRange || isUserNameNotValid
 
 
     if(!haveErrors){
