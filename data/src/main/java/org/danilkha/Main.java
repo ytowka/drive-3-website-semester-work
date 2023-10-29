@@ -63,8 +63,8 @@ public class Main {
                     String avatarUri = in.nextLine();
                     System.out.println("password: ");
                     String password = in.nextLine();
-                    UserDto userDto = authenticationService.registerUser(name, email, avatarUri, password);
-                    System.out.println(userDto);
+                    //UserDto userDto = authenticationService.registerUser(name, email, avatarUri, password);
+                    //System.out.println(userDto);
                 }
                 case "confEmail" ->{
                     System.out.println("uuid: ");

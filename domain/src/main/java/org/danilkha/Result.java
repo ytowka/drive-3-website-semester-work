@@ -1,20 +1,20 @@
 package org.danilkha;
 
-abstract public class Result {
-    static class Success<T> extends Result{
+abstract public sealed class Result<T> permits Result.Success, Result.Error{
+    public static final class Success<T> extends Result<T>{
         private final T data;
 
-        Success(T data) {
+        public Success(T data) {
             this.data = data;
         }
         public T getData() {
             return data;
         }
     }
-    static class Error extends Result{
+    public static final class Error<T> extends Result<T>{
         private final String message;
 
-        Error(String message) {
+        public Error(String message) {
             this.message = message;
         }
 

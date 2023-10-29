@@ -1,5 +1,6 @@
 package org.danilkha.service;
 
+import org.danilkha.Result;
 import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.entities.PasswordResetLinkEntity;
 import org.danilkha.utils.CodeGenerator;
@@ -51,10 +52,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public @Nullable UserDto registerUser(String name, String email, String avatarUri, String password){
+    public Result<UserDto> registerUser(String name, String email, String avatarUri, String password){
         byte[] passwordHash = passwordEncoder.hashPassword(password);
         String encodedPassword = passwordEncoder.encodePassword(passwordHash);
 
+        try {
+            if(userDao.getByUsername(name) != null){
+                return new Result.Error<>(AuthenticationService.REGISTRATION_USERNAME_ALREADY_USED);
+            }
+            if(userDao.getByEmail(email) != null){
+                return new Result.Error<>(AuthenticationService.REGISTRATION_EMAIL_ALREADY_USED);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         UUID id = null;
         try {
             id = userDao.create(new UserEntity(null, encodedPassword, email, name, avatarUri,false));
@@ -63,13 +74,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
         if(id != null){
             sendEmailConfirmationCode(id);
-            return new UserDto(
+            return new Result.Success<>(new UserDto(
                     id,
                     name,
                     email,
                     avatarUri,
                     false
-            );
+            ));
+
         }
         return null;
     }

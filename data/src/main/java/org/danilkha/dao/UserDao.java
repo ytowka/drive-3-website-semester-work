@@ -13,6 +13,7 @@ import java.util.UUID;
 public interface UserDao {
 
     UserEntity getByEmail(String email) throws SQLException;
+    UserEntity getByUsername(String username) throws SQLException;
 
     UserEntity getById(UUID uuid) throws SQLException;
 
@@ -37,6 +38,8 @@ public interface UserDao {
         //language=SQL
         private static final String SELECT_BY_EMAIL_QUERY = "SELECT * FROM account WHERE email = ?";
         //language=SQL
+        private static final String SELECT_BY_USERNAME_QUERY = "SELECT * FROM account WHERE username = ?";
+        //language=SQL
         private static final String SELECT_QUERY = "SELECT * FROM account WHERE id = ?";
 
         //language=SQL
@@ -54,6 +57,17 @@ public interface UserDao {
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
                return ORM.parseResultSet(resultSet, UserEntity.class);
+            }
+            return null;
+        }
+
+        @Override
+        public UserEntity getByUsername(String username) throws SQLException {
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_BY_USERNAME_QUERY);
+            statement.setString(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()){
+                return ORM.parseResultSet(resultSet, UserEntity.class);
             }
             return null;
         }

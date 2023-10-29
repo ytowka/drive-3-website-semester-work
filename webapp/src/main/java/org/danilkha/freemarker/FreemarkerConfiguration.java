@@ -11,7 +11,7 @@ public class FreemarkerConfiguration {
         if(cfg == null){
             cfg = new Configuration(Configuration.VERSION_2_3_32);
             cfg.setServletContextForTemplateLoading(
-                    context, "/WEB-INF/templates"
+                    context, "/templates"
             );
             cfg.setDefaultEncoding("UTF-8");
             cfg.setLogTemplateExceptions(true);

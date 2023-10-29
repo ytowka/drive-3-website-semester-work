@@ -22,6 +22,7 @@ public abstract class HtmlServlet extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         Configuration freemarkerCfg = FreemarkerConfiguration.getConfig(getServletContext());
         Map<String, Object> root = new HashMap<>();
+        root.put("contextPath", getServletContext().getContextPath());
         Template template = buildPage(req, freemarkerCfg, root);
         try {
             template.process(root, resp.getWriter());

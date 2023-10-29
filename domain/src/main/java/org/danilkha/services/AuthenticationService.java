@@ -1,5 +1,6 @@
 package org.danilkha.services;
 
+import org.danilkha.Result;
 import org.danilkha.dto.UserDto;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,20 +9,21 @@ import java.util.UUID;
 
 public interface AuthenticationService {
 
+    public static final String REGISTRATION_EMAIL_ALREADY_USED = "email-already-used";
+    public static final String REGISTRATION_USERNAME_ALREADY_USED = "username-already-used";
 
     /**
      * @param name
      * @param email
      * @param avatarUri
      * @param password
-     * @return UserDto object if account was successfully created
+     * @return Result
      * @throws SQLException
      */
-    @Nullable
-    UserDto registerUser(String name,
-                         String email,
-                         String avatarUri,
-                         String password);
+    Result<UserDto> registerUser(String name,
+                                 String email,
+                                 String avatarUri,
+                                 String password);
 
 
     /**
