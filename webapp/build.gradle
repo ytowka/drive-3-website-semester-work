@@ -22,9 +22,10 @@ dependencies {
 
     implementation('org.freemarker:freemarker:2.3.32')
     implementation('com.fasterxml.jackson.core:jackson-databind:2.15.3')
+    implementation project(':domain-api')
+    implementation project(':domain-impl')
 
 
-    implementation project(':domain')
     implementation project(':data')
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")

@@ -1,10 +1,10 @@
-package org.danilkha.enttypoint;
+package org.danilkha.entrypoint;
 
+import com.danilkha.service.AuthenticationServiceImpl;
 import org.danilkha.ConnectionProvider;
 import org.danilkha.dao.ConfirmationCodesDao;
 import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.dao.UserDao;
-import org.danilkha.service.AuthenticationServiceImpl;
 import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.CodeGenerator;
 import org.danilkha.utils.ConnectionPool;

@@ -1,4 +1,4 @@
-package org.danilkha.service;
+package com.danilkha.service;
 
 import org.danilkha.Result;
 import org.danilkha.dao.PasswordResetCodesDao;

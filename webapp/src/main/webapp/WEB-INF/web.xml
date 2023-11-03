@@ -5,6 +5,6 @@
          version="4.0">
 
     <listener>
-        <listener-class>org.danilkha.enttypoint.InitListener</listener-class>
+        <listener-class>org.danilkha.entrypoint.InitListener</listener-class>
     </listener>
 </web-app>

@@ -1,8 +1,9 @@
 rootProject.name = 'car-configurator-gradle'
-include 'domain'
+include 'domain-api'
 include 'data'
 include 'webapp'
 include 'utils'
 include 'feature.authorization'
 include 'feature.profile'
+include 'domain-impl'
 

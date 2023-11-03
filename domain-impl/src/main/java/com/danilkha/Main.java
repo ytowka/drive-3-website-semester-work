@@ -1,10 +1,11 @@
-package org.danilkha;
+package com.danilkha;
 
+import com.danilkha.service.AuthenticationServiceImpl;
+import org.danilkha.ConnectionProvider;
 import org.danilkha.dao.ConfirmationCodesDao;
 import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.dao.UserDao;
 import org.danilkha.dto.UserDto;
-import org.danilkha.service.AuthenticationServiceImpl;
 import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.CodeGenerator;
 import org.danilkha.utils.EmailSender;
