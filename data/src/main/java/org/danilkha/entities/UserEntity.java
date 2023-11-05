@@ -3,7 +3,7 @@ package org.danilkha.entities;
 import org.danilkha.dto.UserDto;
 import org.example.orm.ColumnInfo;
 import org.example.orm.Entity;
-import org.example.orm.TypeConverters;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
@@ -13,7 +13,9 @@ public record UserEntity(
         UUID id,
         @ColumnInfo(name = "password_hash") String encodedPasswordHash,
         @ColumnInfo(name = "email") String email,
-        @ColumnInfo(name = "username") String userName,
+        @ColumnInfo(name = "username") @Nullable String username,
+        @ColumnInfo(name = "name") String firstname,
+        @ColumnInfo(name = "surname") String surname,
         @ColumnInfo(name = "avatar_uri") String avatarUri,
         @ColumnInfo(name = "is_email_confirmed") boolean isEmailConfirmed
 ) {
@@ -21,7 +23,9 @@ public record UserEntity(
     public UserDto toDto(){
         return new UserDto(
                 id,
-                userName,
+                username,
+                firstname,
+                surname,
                 email,
                 avatarUri,
                 isEmailConfirmed

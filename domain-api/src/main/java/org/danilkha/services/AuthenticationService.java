@@ -4,6 +4,7 @@ import org.danilkha.Result;
 import org.danilkha.dto.UserDto;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.UUID;
 
@@ -13,17 +14,22 @@ public interface AuthenticationService {
     public static final String REGISTRATION_USERNAME_ALREADY_USED = "username-already-used";
 
     /**
-     * @param name
+     * @param avatarPicture input stream of file
+     * @param username
      * @param email
-     * @param avatarUri
      * @param password
      * @return Result
      * @throws SQLException
      */
-    Result<UserDto> registerUser(String name,
-                                 String email,
-                                 String avatarUri,
-                                 String password);
+    Result<UserDto> registerUser(
+            @Nullable InputStream avatarPicture,
+            @Nullable String fileName,
+            String username,
+            String firstname,
+            String surname,
+            String email,
+            String password
+    );
 
 
     /**

@@ -9,6 +9,7 @@ import org.danilkha.dto.UserDto;
 import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.CodeGenerator;
 import org.danilkha.utils.EmailSender;
+import org.danilkha.utils.FileProvider;
 import org.danilkha.utils.PasswordEncoder;
 
 import java.security.MessageDigest;
@@ -37,9 +38,10 @@ public class Main {
         PasswordEncoder passwordEncoder = new PasswordEncoder(MessageDigest.getInstance("SHA-256"));
         CodeGenerator codeGenerator = new CodeGenerator();
         EmailSender emailSender = new EmailSender();
+        FileProvider fileProvider = new FileProvider("", codeGenerator);
 
         AuthenticationService authenticationService = new AuthenticationServiceImpl(
-                userDao, confirmationCodesDao, passwordResetCodesDao, passwordEncoder, 1, 1, codeGenerator, emailSender
+                userDao, confirmationCodesDao, passwordResetCodesDao,  fileProvider, passwordEncoder, 1, 1, codeGenerator, emailSender
         );
 
         Scanner in = new Scanner(System.in);
@@ -56,7 +58,7 @@ public class Main {
                     System.out.println(userDto);
                 }
                 case "reg" ->{
-                    System.out.println("name: ");
+                    System.out.println("username: ");
                     String name = in.nextLine();
                     System.out.println("email: ");
                     String email = in.nextLine();
@@ -64,7 +66,7 @@ public class Main {
                     String avatarUri = in.nextLine();
                     System.out.println("password: ");
                     String password = in.nextLine();
-                    //UserDto userDto = authenticationService.registerUser(name, email, avatarUri, password);
+                    //UserDto userDto = authenticationService.registerUser(username, email, avatarUri, password);
                     //System.out.println(userDto);
                 }
                 case "confEmail" ->{

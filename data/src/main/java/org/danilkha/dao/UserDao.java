@@ -74,7 +74,7 @@ public interface UserDao {
 
         @Override
         public UserEntity getById(UUID uuid) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_BY_EMAIL_QUERY);
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(SELECT_QUERY);
             statement.setObject(1, uuid);
             ResultSet resultSet = statement.executeQuery();
             if(resultSet.next()){
@@ -99,7 +99,7 @@ public interface UserDao {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(UPDATE_QUERY);
             statement.setString(1, userEntity.encodedPasswordHash());
             statement.setString(2, userEntity.email());
-            statement.setString(3, userEntity.userName());
+            statement.setString(3, userEntity.username());
             statement.setBoolean(4, userEntity.isEmailConfirmed());
             statement.setObject(5, userEntity.id());
             int result = statement.executeUpdate();

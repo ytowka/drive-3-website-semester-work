@@ -54,17 +54,18 @@ function processForm(e) {
     const name = form.firstname.value
     const surname = form.surname.value
 
+    const emailErrorLabel  =document.getElementById("email-error-label")
     const passwordRepeatErrorLabel = document.getElementById("password-not-match-label")
     const passwordErrorLabel = document.getElementById("password-too-short-label")
     const usernameErrorLabel = document.getElementById("username-error-label")
     const nameErrorLabel = document.getElementById("name-error-label")
     const surnameErrorLabel = document.getElementById("surname-error-label")
 
-    const isPasswordToShort = password.length < 8
+    const isPasswordToShort = password.length < minPasswordLength
     const isPasswordRepeatWrong = password !== passwordRepeat
-    const isUserNameLengthOutOfRange = username.length < 2 || username.length > 50
-    const isNameLengthOutOfRange = name.length < 2 || username.length > 50
-    const isSurnameLengthOutOfRange = surname.length < 2 || username.length > 50
+    const isUserNameLengthOutOfRange = username.length < minNameLength || username.length > maxNameLength
+    const isNameLengthOutOfRange = name.length < minNameLength || username.length > maxNameLength
+    const isSurnameLengthOutOfRange = surname.length < minNameLength || username.length > maxNameLength
 
     const isUserNameNotValid = !usernameRe.test(username)
 
@@ -73,9 +74,10 @@ function processForm(e) {
     setVisible(usernameErrorLabel, isUserNameLengthOutOfRange || isUserNameNotValid)
     setVisible(nameErrorLabel, isNameLengthOutOfRange)
     setVisible(surnameErrorLabel, isSurnameLengthOutOfRange)
+    setVisible(emailErrorLabel, false)
 
     if(isUserNameLengthOutOfRange){
-        usernameErrorLabel.innerText = "имя пользователя слишком короткое или слишком длинное"
+        usernameErrorLabel.innerText = `имя пользователя должно быть от ${minNameLength} до ${maxNameLength} символов`
     }else if(isUserNameNotValid){
         usernameErrorLabel.innerText = "имя пользователя не может содержать пробелы, только символы английского алфавиты, цифры или _ -"
     }
@@ -98,9 +100,18 @@ function processForm(e) {
             success: function (data) {
                 console.log(data)
             },
-            error: function (jqXHR, exception) {
-                jqXHR.data
+        }).fail(function (xhr){
+            const data = xhr.responseJSON;
+
+            if(data.message === "username-already-used"){
+                usernameErrorLabel.innerText = "имя пользователя уже занято"
+                setVisible(usernameErrorLabel, true)
+            } else if(data.message === "email-already-used"){
+                setVisible(emailErrorLabel, true)
+            } else{
+
             }
+            console.log(data);
         })
     }
     return false;

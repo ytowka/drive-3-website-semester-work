@@ -16,10 +16,15 @@ public class ConnectionPool {
     public ConnectionPool(){
         dataSource = new BasicDataSource();
 
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/mydatabase");
-        dataSource.setUsername("username");
-        dataSource.setPassword("password");
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        dataSource.setDriverClassName("org.postgresql.Driver");
+        dataSource.setUrl(HOST);
+        dataSource.setUsername(USER);
+        dataSource.setPassword(PASS);
 
         // Set other connection pool configuration properties (e.g., max connection count, validation query)
 

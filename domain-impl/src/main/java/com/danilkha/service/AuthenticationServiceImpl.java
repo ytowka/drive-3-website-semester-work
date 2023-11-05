@@ -5,6 +5,7 @@ import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.entities.PasswordResetLinkEntity;
 import org.danilkha.utils.CodeGenerator;
 import org.danilkha.utils.EmailSender;
+import org.danilkha.utils.FileProvider;
 import org.danilkha.utils.PasswordEncoder;
 import org.danilkha.dao.ConfirmationCodesDao;
 import org.danilkha.dao.UserDao;
@@ -14,6 +15,8 @@ import org.danilkha.entities.UserEntity;
 import org.danilkha.services.AuthenticationService;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -23,6 +26,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserDao userDao;
     private final ConfirmationCodesDao confirmationCodesDao;
     private final PasswordResetCodesDao passwordResetCodesDao;
+
+    private final FileProvider userAvatarFileProvider;
 
     private final PasswordEncoder passwordEncoder;
     private final CodeGenerator codeGenerator;
@@ -35,7 +40,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public AuthenticationServiceImpl(
             UserDao userDao,
             ConfirmationCodesDao confirmationCodesDao,
-            PasswordResetCodesDao passwordResetCodesDao, PasswordEncoder passwordEncoder,
+            PasswordResetCodesDao passwordResetCodesDao,
+            FileProvider userAvatarFileProvider,
+            PasswordEncoder passwordEncoder,
             int emailConfirmationCodeAgeMinutes,
             int passwordResetCodeAgeMinutes,
             CodeGenerator codeGenerator,
@@ -44,6 +51,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.userDao = userDao;
         this.confirmationCodesDao = confirmationCodesDao;
         this.passwordResetCodesDao = passwordResetCodesDao;
+        this.userAvatarFileProvider = userAvatarFileProvider;
         this.passwordEncoder = passwordEncoder;
         this.emailConfirmationCodeAgeMinutes = emailConfirmationCodeAgeMinutes;
         this.passwordResetCodeAgeMinutes = passwordResetCodeAgeMinutes;
@@ -52,12 +60,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Result<UserDto> registerUser(String name, String email, String avatarUri, String password){
+    public Result<UserDto> registerUser(InputStream avatarPicture, @Nullable String fileName, String username, String firstname, String surname,String email, String password){
         byte[] passwordHash = passwordEncoder.hashPassword(password);
         String encodedPassword = passwordEncoder.encodePassword(passwordHash);
 
         try {
-            if(userDao.getByUsername(name) != null){
+            if(userDao.getByUsername(username) != null){
                 return new Result.Error<>(AuthenticationService.REGISTRATION_USERNAME_ALREADY_USED);
             }
             if(userDao.getByEmail(email) != null){
@@ -67,23 +75,34 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new RuntimeException(e);
         }
         UUID id = null;
+        String avatarFileName = null;
         try {
-            id = userDao.create(new UserEntity(null, encodedPassword, email, name, avatarUri,false));
+            if(avatarPicture != null){
+                try {
+                    avatarFileName = userAvatarFileProvider.saveFile(avatarPicture, username+"-"+fileName);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            id = userDao.create(new UserEntity(null, encodedPassword, email, username,firstname, surname, avatarFileName,false));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
         if(id != null){
             sendEmailConfirmationCode(id);
+
             return new Result.Success<>(new UserDto(
                     id,
-                    name,
+                    username,
+                    firstname,
+                    surname,
                     email,
-                    avatarUri,
+                    avatarFileName,
                     false
             ));
 
         }
-        return null;
+        return new Result.Error<>("error");
     }
 
     @Override
@@ -133,7 +152,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     )
             );
             String userEmail = userDao.getById(userId).email();
-            emailSender.sendEmail(userEmail, "password reset link: "+code,"password reset");
+            emailSender.sendEmail(userEmail, "email confirmation code: "+code,"email confirmation code");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

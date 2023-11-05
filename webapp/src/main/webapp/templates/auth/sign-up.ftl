@@ -1,5 +1,5 @@
-<#-- @ftlvariable name="contextPath" type="java.lang.String" -->
-<#-- @ftlvariable name="usernameRegexPattern" type="java.lang.String" -->
+<#-- @ftlvariable username="contextPath" type="java.lang.String" -->
+<#-- @ftlvariable username="usernameRegexPattern" type="java.lang.String" -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,6 +16,9 @@
 <script >
     const contextPath = "${contextPath}"
     const usernameRegexPattern = "${usernameRegexPattern}"
+    const minNameLength = ${minNameLength}
+    const maxNameLength = ${maxNameLength}
+    const minPasswordLength = ${minPasswordLength}
 </script>
 <div class="main-content">
     <div class="card">
@@ -41,7 +44,7 @@
                     Имя
                     <input name="firstname">
                 </label>
-                <p id="name-error-label" class="error-message">имя слишком короткое или слишком длинное</p>
+                <p id="name-error-label" class="error-message">имя должно быть от ${minNameLength} до ${maxNameLength} символов</p>
             </div>
 
 
@@ -50,14 +53,14 @@
                     Фамилия
                     <input name="surname">
                 </label>
-                <p id="surname-error-label" class="error-message">фамилия пользователя слишком короткое или слишком длинное</p>
+                <p id="surname-error-label" class="error-message">Фамилия должна быть от ${minNameLength} до ${maxNameLength} символов</p>
             </div>
             <div class="field-container">
                 <label>
                     Эл. почта
                     <input name="email" type="email">
                 </label>
-                <p id="email-already-used" class="error-message">пользователь с такой электронной почтой уже зарегестрирован</p>
+                <p id="email-error-label" class="error-message">пользователь с такой электронной почтой уже зарегестрирован</p>
             </div>
 
             <div style=" grid-column-start: 1; grid-column-end: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px">
@@ -66,7 +69,7 @@
                         Пароль
                         <input name="password" type="password">
                     </label>
-                    <p id="password-too-short-label" class="error-message">Пароль должен быть минимум 8 символов</p>
+                    <p id="password-too-short-label" class="error-message">Пароль должен быть минимум ${minPasswordLength} символов</p>
                 </div>
                 <div class="field-container">
                     <label>

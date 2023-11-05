@@ -13,13 +13,17 @@ public class FileProvider {
             CodeGenerator codeGenerator
     ){
         this.basePath = basePath;
+        File f = new File(basePath);
+        if(!f.exists()){
+            f.mkdir();
+        }
         this.codeGenerator = codeGenerator;
     }
 
     /**
      *
      * @param inputStream
-     * @return saved file name
+     * @return saved file username
      * @throws IOException
      */
     public String saveFile(InputStream inputStream, String originalName) throws IOException {
@@ -36,10 +40,6 @@ public class FileProvider {
 
         }
         return name;
-    }
-
-    public File getFile(){
-        return null;
     }
 
     public String getBasePath() {

@@ -6,23 +6,32 @@ import org.danilkha.dao.ConfirmationCodesDao;
 import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.dao.UserDao;
 import org.danilkha.services.AuthenticationService;
-import org.danilkha.utils.CodeGenerator;
-import org.danilkha.utils.ConnectionPool;
-import org.danilkha.utils.EmailSender;
-import org.danilkha.utils.PasswordEncoder;
+import org.danilkha.utils.*;
 
+import javax.servlet.ServletContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class ServiceLocator {
 
     public static final String AUTH_SERVICE = "auth_service";
+    public static final String USER_PROFILE_PICS_PATH = "/pictures";
+    public static final String PROPERTY_FILE = "local.properties";
 
-    protected static AuthenticationService provideAuthenticationRepository(){
+    private final ServletContext servletContext;
+
+    protected ServiceLocator(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    protected AuthenticationService provideAuthenticationService(
+            String basePath
+    ){
         return new AuthenticationServiceImpl(
             provideUserDao(),
                 provideConfirmationCodesDao(),
                 providePasswordResetCodesDao(),
+                provideFileProvider(basePath+USER_PROFILE_PICS_PATH),
                 providePasswordEncoder(),
                 10,
                 10,
@@ -31,23 +40,31 @@ public class ServiceLocator {
         );
     }
 
-    protected static ConfirmationCodesDao provideConfirmationCodesDao(){
+    protected ConfirmationCodesDao provideConfirmationCodesDao(){
         return new ConfirmationCodesDao.Impl(provideConnectionProvider());
     }
 
-    protected static UserDao provideUserDao(){
+    protected FileProvider provideFileProvider(String basePath){
+        return new FileProvider(basePath, provideCodeGenerator());
+    }
+
+    protected UserDao provideUserDao(){
         return new UserDao.Impl(provideConnectionProvider());
     }
 
-    protected static PasswordResetCodesDao providePasswordResetCodesDao(){
+    protected PropertyReader providePropertyReader(){
+      return new PropertyReader(servletContext.getRealPath(PROPERTY_FILE));
+    }
+
+    protected PasswordResetCodesDao providePasswordResetCodesDao(){
         return new PasswordResetCodesDao.Impl(provideConnectionProvider());
     }
 
-    protected static PasswordEncoder providePasswordEncoder(){
+    protected PasswordEncoder providePasswordEncoder(){
         return new PasswordEncoder(provideMessageDigest());
     }
 
-    protected static MessageDigest provideMessageDigest(){
+    protected MessageDigest provideMessageDigest(){
         try {
             return MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
@@ -55,16 +72,16 @@ public class ServiceLocator {
         }
     }
 
-    protected static EmailSender provideEmailSender(){
+    protected EmailSender provideEmailSender(){
         return new EmailSender();
     }
 
-    protected static CodeGenerator provideCodeGenerator(){
+    protected CodeGenerator provideCodeGenerator(){
         return new CodeGenerator();
     }
 
-    private static ConnectionPool _connectionPoolInstance = null;
-    protected static synchronized ConnectionProvider provideConnectionProvider(){
+    private ConnectionPool _connectionPoolInstance = null;
+    protected synchronized ConnectionProvider provideConnectionProvider(){
         if(_connectionPoolInstance == null){
             _connectionPoolInstance = new ConnectionPool();
         }
