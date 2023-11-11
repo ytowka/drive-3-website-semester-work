@@ -10,8 +10,9 @@ import java.util.UUID;
 
 public interface AuthenticationService {
 
-    public static final String REGISTRATION_EMAIL_ALREADY_USED = "email-already-used";
-    public static final String REGISTRATION_USERNAME_ALREADY_USED = "username-already-used";
+    String REGISTRATION_EMAIL_ALREADY_USED = "email-already-used";
+    String REGISTRATION_USERNAME_ALREADY_USED = "username-already-used";
+    String IDENTIFIER_SPLITTER = ":";
 
     /**
      * @param avatarPicture input stream of file
@@ -40,5 +41,7 @@ public interface AuthenticationService {
      * @throws SQLException
      */
     @Nullable
-    UserDto authUser(String login, String password);
+    Result<UserDto> authUser(String login, String password);
+
+    Result<UserDto> fastAuth(String identifier);
 }

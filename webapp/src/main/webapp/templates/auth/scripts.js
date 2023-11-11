@@ -101,6 +101,7 @@ function processForm(e) {
             method: 'POST',
             success: function (data) {
                 console.log(data)
+                window.location.href = "feed";
             },
         }).fail(function (xhr){
             const data = xhr.responseJSON;

@@ -1,5 +1,6 @@
 package org.danilkha.dto;
 
+import java.util.Date;
 import java.util.UUID;
 
 public record UserDto(
@@ -8,6 +9,7 @@ public record UserDto(
         String firstname,
         String surname,
         String email,
+        String passwordHash,
         String avatarUri,
-        boolean isEmailConfirmed
+        Date registrationDate
 ){ }

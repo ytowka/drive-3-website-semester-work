@@ -23,16 +23,12 @@ public interface UserDao {
 
     boolean delete(UUID uuid) throws SQLException;
 
-    void confirmEmail(UUID uuid) throws SQLException;
-
     void updatePassword(UUID uuid, String newPasswordHash) throws SQLException;
 
     class Impl implements UserDao{
 
         //language=SQL
-        private static final String UPDATE_QUERY = "UPDATE account SET (password_hash, email, username, is_email_confirmed) = (?, ?, ?, ?) WHERE id = ?";
-        //language=SQL
-        private static final String UPDATE_CONFIRM_QUERY = "UPDATE account SET is_email_confirmed = TRUE where id = ?";
+        private static final String UPDATE_QUERY = "UPDATE account SET (password_hash, email, username, registration_date) = (?, ?, ?, ?) WHERE id = ?";
         //language=SQL
         private static final String UPDATE_PASSWORD_QUERY = "UPDATE account SET password_hash = ? where id = ?";
         //language=SQL
@@ -100,7 +96,7 @@ public interface UserDao {
             statement.setString(1, userEntity.encodedPasswordHash());
             statement.setString(2, userEntity.email());
             statement.setString(3, userEntity.username());
-            statement.setBoolean(4, userEntity.isEmailConfirmed());
+            statement.setObject(4, userEntity.registrationDate());
             statement.setObject(5, userEntity.id());
             int result = statement.executeUpdate();
             return result > 0;
@@ -112,13 +108,6 @@ public interface UserDao {
             statement.setObject(1, uuid);
             int result = statement.executeUpdate();
             return result > 0;
-        }
-
-        @Override
-        public void confirmEmail(UUID uuid) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(UPDATE_CONFIRM_QUERY);
-            statement.setObject(1, uuid);
-            statement.executeUpdate();
         }
 
         @Override

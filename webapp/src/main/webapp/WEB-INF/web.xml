@@ -7,4 +7,13 @@
     <listener>
         <listener-class>org.danilkha.entrypoint.InitListener</listener-class>
     </listener>
+
+    <filter>
+        <filter-name>authFilter</filter-name>
+        <filter-class>org.danilkha.entrypoint.AuthServletFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>authFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

@@ -1,7 +1,6 @@
 package com.danilkha.service;
 
 import org.danilkha.Result;
-import org.danilkha.utils.CodeGenerator;
 import org.danilkha.utils.FileProvider;
 import org.danilkha.utils.PasswordEncoder;
 import org.danilkha.dao.UserDao;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.UUID;
 
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -50,6 +50,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new RuntimeException(e);
         }
         UUID id = null;
+        Date date = new Date();
         String avatarFileName = null;
         try {
             if(avatarPicture != null){
@@ -59,7 +60,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     throw new RuntimeException(e);
                 }
             }
-            id = userDao.create(new UserEntity(null, encodedPassword, email, username,firstname, surname, avatarFileName,false));
+            id = userDao.create(new UserEntity(null, encodedPassword, email, username,firstname, surname, avatarFileName, date));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -70,8 +71,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     firstname,
                     surname,
                     email,
+                    encodedPassword,
                     avatarFileName,
-                    false
+                    date
             ));
 
         }
@@ -80,7 +82,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     @Nullable
-    public UserDto authUser(String login, String password)  {
+    public Result<UserDto> authUser(String login, String password)  {
         UserEntity userEntity;
         try {
             if(login.contains("@")){
@@ -93,13 +95,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 byte[] passwordDecoded = passwordEncoder.decodePassword(userEntity.encodedPasswordHash());
                 boolean isPasswordCorrect = Arrays.equals(passwordDecoded, passwordEncoder.hashPassword(password));
                 if(isPasswordCorrect){
-                    return userEntity.toDto();
+                    return new Result.Success<>(userEntity.toDto());
                 }
             }
+            return new Result.Error<>("wrong credentials");
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return new Result.Error<>("", e);
         }
-        return null;
     }
 
+    @Override
+    public Result<UserDto> fastAuth(String identifier) {
+        try {
+            String[] credentials = identifier.split(IDENTIFIER_SPLITTER);
+            String login = credentials[0];
+            String password = credentials[1];
+            UserEntity userEntity = userDao.getByUsername(login);
+            if(userEntity.encodedPasswordHash().equals(password)){
+                return new Result.Success<>(userEntity.toDto());
+            }else{
+                return new Result.Error<>("wrong cookies");
+            }
+        } catch (Exception e) {
+            return new Result.Error<>(e.getMessage(), e);
+        }
+    }
 }

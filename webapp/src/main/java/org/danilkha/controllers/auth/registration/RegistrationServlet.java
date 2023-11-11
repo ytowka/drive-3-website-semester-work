@@ -8,11 +8,13 @@ import org.danilkha.Result;
 import org.danilkha.ValidationConfig;
 import org.danilkha.controllers.BaseResponse;
 import org.danilkha.dto.UserDto;
+import org.danilkha.entrypoint.AuthServletFilter;
 import org.danilkha.entrypoint.ServiceLocator;
 import org.danilkha.framework.HtmlServlet;
 import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.MultipartUtils;
 import org.danilkha.utils.PropertyReader;
+import org.danilkha.utils.RememberMeCookies;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -68,9 +70,6 @@ public class RegistrationServlet extends HtmlServlet {
                 picture = part.getInputStream();
                 fileName = MultipartUtils.getFileName(part);
             }
-            req.getParameterMap().forEach((key, value ) -> {
-                System.out.println(key+": "+ Arrays.toString(value));
-            });
             Result<UserDto> regResult = authenticationService.registerUser(
                     picture,
                     fileName,
@@ -83,6 +82,10 @@ public class RegistrationServlet extends HtmlServlet {
 
             if(regResult instanceof Result.Success<UserDto> result){
                 resp.setStatus(HttpServletResponse.SC_OK);
+                if("on".equals(req.getParameter("rememberMe"))){
+                    RememberMeCookies.addCredentialsCookie(resp, result.getData());
+                }
+                req.getServletContext().setAttribute(AuthServletFilter.USER_ATTRIBUTE, result.getData());
                 BaseResponse response = new BaseResponse("OK", "");
                 resp.getWriter().write(objectMapper.writeValueAsString(response));
             }else if(regResult instanceof Result.Error<UserDto> result){
