@@ -48,6 +48,8 @@ function processForm(e) {
 
     const formData = new FormData(form)
 
+    console.log(formData)
+
     const password = form.password.value
     const passwordRepeat = form.passwordRepeat.value
     const username = form.username.value
@@ -92,7 +94,7 @@ function processForm(e) {
         formData.delete("passwordRepeat")
 
         $.ajax({
-            url: `http://localhost:8080${contextPath}/register`,
+            url: `http://localhost:8080${contextPath}/sign-up`,
             data: formData,
             processData: false,
             contentType: false,

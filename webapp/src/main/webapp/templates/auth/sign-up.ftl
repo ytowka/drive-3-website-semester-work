@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="${contextPath}/res/jquery-3.7.1.min.js"></script>
-    <title>Title</title>
+    <title>Sign up</title>
 </head>
 <body>
 <!-- Section: Design Block -->
@@ -82,8 +82,8 @@
                     <input type="checkbox" name="rememberMe" style="width: 20px; height: 20px;">
                     Запомнить меня
                 </label>
-                <button name="submit">Создать аккаунт</button>
-                <a href="../sign-in">Войти в аккаунт</a>
+                <button type="submit" name="submit">Создать аккаунт</button>
+                <a href="sign-in">Войти в аккаунт</a>
             </div>
         </form>
     </div>

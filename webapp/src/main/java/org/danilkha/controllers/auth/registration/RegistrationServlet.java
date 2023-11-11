@@ -1,23 +1,29 @@
-package org.danilkha.controllers.registration;
+package org.danilkha.controllers.auth.registration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.danilkha.ValidationConfig;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.danilkha.ContentTypes;
 import org.danilkha.Result;
+import org.danilkha.ValidationConfig;
+import org.danilkha.controllers.BaseResponse;
 import org.danilkha.dto.UserDto;
 import org.danilkha.entrypoint.ServiceLocator;
+import org.danilkha.framework.HtmlServlet;
 import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.MultipartUtils;
+import org.danilkha.utils.PropertyReader;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @MultipartConfig(
@@ -25,9 +31,20 @@ import java.util.regex.Pattern;
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 5 * 5
 )
-@WebServlet(name = "registrationApi", value = "/register")
-public class RegistrationApiServlet extends HttpServlet {
+@WebServlet(name = "sign-up", value = "/sign-up")
+public class RegistrationServlet extends HtmlServlet {
 
+
+    public static final String usernameRegexPattern = "[A-z0-9_-]+";
+
+    @Override
+    public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
+        root.put("usernameRegexPattern", usernameRegexPattern);
+        root.put("minNameLength", ValidationConfig.minNameLength);
+        root.put("maxNameLength",  ValidationConfig.maxNameLength);
+        root.put("minPasswordLength", ValidationConfig.mimPasswordLength);
+        return freemarkerCfg.getTemplate("auth/sign-up.ftl");
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -39,7 +56,7 @@ public class RegistrationApiServlet extends HttpServlet {
 
             if(!isFieldsValid(req)){
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                RegistrationResponse response = new RegistrationResponse("ERROR","invalid_fields");
+                BaseResponse response = new BaseResponse("ERROR","invalid_fields");
                 resp.getWriter().write(objectMapper.writeValueAsString(response));
             }
 
@@ -51,6 +68,9 @@ public class RegistrationApiServlet extends HttpServlet {
                 picture = part.getInputStream();
                 fileName = MultipartUtils.getFileName(part);
             }
+            req.getParameterMap().forEach((key, value ) -> {
+                System.out.println(key+": "+ Arrays.toString(value));
+            });
             Result<UserDto> regResult = authenticationService.registerUser(
                     picture,
                     fileName,
@@ -63,11 +83,11 @@ public class RegistrationApiServlet extends HttpServlet {
 
             if(regResult instanceof Result.Success<UserDto> result){
                 resp.setStatus(HttpServletResponse.SC_OK);
-                RegistrationResponse response = new RegistrationResponse("OK", "");
+                BaseResponse response = new BaseResponse("OK", "");
                 resp.getWriter().write(objectMapper.writeValueAsString(response));
             }else if(regResult instanceof Result.Error<UserDto> result){
                 resp.setStatus(HttpServletResponse.SC_CONFLICT);
-                RegistrationResponse response = new RegistrationResponse("ERROR",result.getMessage());
+                BaseResponse response = new BaseResponse("ERROR",result.getMessage());
                 resp.getWriter().write(objectMapper.writeValueAsString(response));
             }
         }catch (Exception e){

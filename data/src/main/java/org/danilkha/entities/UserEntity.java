@@ -13,7 +13,7 @@ public record UserEntity(
         UUID id,
         @ColumnInfo(name = "password_hash") String encodedPasswordHash,
         @ColumnInfo(name = "email") String email,
-        @ColumnInfo(name = "username") @Nullable String username,
+        @ColumnInfo(name = "username") String username,
         @ColumnInfo(name = "name") String firstname,
         @ColumnInfo(name = "surname") String surname,
         @ColumnInfo(name = "avatar_uri") String avatarUri,

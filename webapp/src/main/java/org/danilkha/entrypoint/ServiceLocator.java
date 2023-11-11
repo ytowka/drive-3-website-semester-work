@@ -2,8 +2,6 @@ package org.danilkha.entrypoint;
 
 import com.danilkha.service.AuthenticationServiceImpl;
 import org.danilkha.ConnectionProvider;
-import org.danilkha.dao.ConfirmationCodesDao;
-import org.danilkha.dao.PasswordResetCodesDao;
 import org.danilkha.dao.UserDao;
 import org.danilkha.services.AuthenticationService;
 import org.danilkha.utils.*;
@@ -29,21 +27,10 @@ public class ServiceLocator {
     ){
         return new AuthenticationServiceImpl(
             provideUserDao(),
-                provideConfirmationCodesDao(),
-                providePasswordResetCodesDao(),
                 provideFileProvider(basePath+USER_PROFILE_PICS_PATH),
-                providePasswordEncoder(),
-                10,
-                10,
-                provideCodeGenerator(),
-                provideEmailSender()
+                providePasswordEncoder()
         );
     }
-
-    protected ConfirmationCodesDao provideConfirmationCodesDao(){
-        return new ConfirmationCodesDao.Impl(provideConnectionProvider());
-    }
-
     protected FileProvider provideFileProvider(String basePath){
         return new FileProvider(basePath, provideCodeGenerator());
     }
@@ -56,10 +43,6 @@ public class ServiceLocator {
       return new PropertyReader(servletContext.getRealPath(PROPERTY_FILE));
     }
 
-    protected PasswordResetCodesDao providePasswordResetCodesDao(){
-        return new PasswordResetCodesDao.Impl(provideConnectionProvider());
-    }
-
     protected PasswordEncoder providePasswordEncoder(){
         return new PasswordEncoder(provideMessageDigest());
     }
@@ -70,10 +53,6 @@ public class ServiceLocator {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    protected EmailSender provideEmailSender(){
-        return new EmailSender();
     }
 
     protected CodeGenerator provideCodeGenerator(){
