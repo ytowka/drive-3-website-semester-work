@@ -5,10 +5,12 @@
 <head>
     <meta charset="UTF-8"><link href="${contextPath}/templates/auth/styles.css" rel="stylesheet" type="text/css" />
     <meta charset="UTF-8"><link href="${contextPath}/templates/default-styles.css" rel="stylesheet" type="text/css" />
+    <meta charset="UTF-8"><link href="${contextPath}/templates/macros/styles.css" rel="stylesheet" type="text/css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
     <script src="${contextPath}/res/jquery-3.7.1.min.js"></script>
+    <#import "/macros/page-blocks.ftl" as ui/>
     <title>Sign up</title>
 </head>
 <body>
@@ -20,6 +22,7 @@
     const maxNameLength = ${maxNameLength}
     const minPasswordLength = ${minPasswordLength}
 </script>
+<@ui.header selectedTab = ""/>
 <div class="main-content">
     <div class="card">
         <form id="registration-form">
@@ -89,6 +92,7 @@
     </div>
     <script src="${contextPath}/templates/auth/scripts.js" ></script>
 </div>
+
 <!-- Section: Design Block -->
 </body>
 </html>

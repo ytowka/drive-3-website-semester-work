@@ -1,10 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>feed</h1>
-</body>
-</html>
+<#import "/macros/base-page.ftl" as ui/>
+<@ui.page selectedTab = "" title="feed">
+    something
+</@ui.page>

@@ -1,6 +1,23 @@
+:root{
+    --backround: #fff;
+    --dark-background: #f3f3f3;
+    --contrast-background: #2a2a2a;
+
+    --primary-color: #c03;
+    --primary-alter-color: #ee3f6b;
+    --accent-color: #47c;
+    --accent-alter-color: #6e9be7;
+
+    --error-color: #be0000;
+
+    --text-color: #040404;
+    --contrast-text-color: #fcfcfc;
+}
+
 body, html {
     margin: 0;
     padding: 0;
+    background: var(--dark-background);
 }
 
 form{
@@ -14,6 +31,7 @@ form{
 
 a {
     font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
 }
 
 .main-content{
@@ -22,7 +40,7 @@ a {
     justify-content: center;
     margin: 0;
     width: 100%;
-    padding: 50px 0;
+    padding: 100px 0;
 }
 
 .card{
@@ -31,10 +49,11 @@ a {
     align-items: center;
     justify-content: center;
     margin: 0;
-    width: 33%;
+    width: 720px;
     padding: 30px;
     gap: 30px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background: var(--backround);
     border-radius: 20px;
 }
 
@@ -55,7 +74,7 @@ label{
     grid-column-end: 3;
     gap: 2px;
     width: 100%;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 input{

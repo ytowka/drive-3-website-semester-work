@@ -10,7 +10,8 @@
 
 .error-message{
     display: none;
-    color: darkred;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--error-color);
     grid-column-start: 1;
     grid-column-end: 3;
 }
