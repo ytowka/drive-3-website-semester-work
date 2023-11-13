@@ -11,13 +11,45 @@
 }
 
 .header-content{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    justify-content: center;
+    display: flex;
+    justify-content: start;
+    gap: 30px;
+    align-items: center;
     margin: 0;
     padding: 0;
-    width: 720px;
+    width: var(--content-width);
     height: 100%;
+}
+
+.spacer{
+    flex: 1;
+}
+
+.auth-buttons-container{
+    display: flex;
+    gap: 10px;
+}
+
+.login-button{
+    background: cornflowerblue;
+    color: white;
+}
+
+.reg-button{
+    background: var(--dark-background);
+    color: black;
+}
+
+.user-avatar{
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    justify-self: end;
+    border-radius: 50%;
+}
+
+.header-content > img {
+    grid-column-start: 5;
 }
 
 .footer{

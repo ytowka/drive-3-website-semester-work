@@ -37,11 +37,20 @@ import java.util.regex.Pattern;
 public class RegistrationServlet extends HtmlServlet {
 
 
-    public static final String usernameRegexPattern = "[A-z0-9_-]+";
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if(req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE) != null){
+            resp.sendRedirect("feed");
+            resp.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
+        }else{
+            super.doGet(req, resp);
+        }
+    }
 
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
-        root.put("usernameRegexPattern", usernameRegexPattern);
+        root.put("usernameRegexPattern", ValidationConfig.usernameRegexPattern);
+        root.put("emailRegexPattern", ValidationConfig.emailRegexPattern);
         root.put("minNameLength", ValidationConfig.minNameLength);
         root.put("maxNameLength",  ValidationConfig.maxNameLength);
         root.put("minPasswordLength", ValidationConfig.mimPasswordLength);
@@ -99,7 +108,7 @@ public class RegistrationServlet extends HtmlServlet {
     }
 
     private boolean isFieldsValid(HttpServletRequest req){
-        Pattern usernameRegex = Pattern.compile(RegistrationServlet.usernameRegexPattern);
+        Pattern usernameRegex = Pattern.compile(ValidationConfig.usernameRegexPattern);
 
         String username = req.getParameter("username");
         String firstname = req.getParameter("firstname");

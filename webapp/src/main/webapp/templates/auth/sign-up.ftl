@@ -3,10 +3,11 @@
 
 <meta charset="UTF-8"><link href="${contextPath}/templates/auth/styles.css" rel="stylesheet" type="text/css" />
 <#import "/macros/base-page.ftl" as ui/>
-<@ui.page selectedTab = "" title="sign up">
+<@ui.page selectedTab = "" title="sign up" userAvatar=userAvatar!"">
     <script >
         const contextPath = "${contextPath}"
         const usernameRegexPattern = "${usernameRegexPattern}"
+        const emailRegexPattern = "${emailRegexPattern}"
         const minNameLength = ${minNameLength}
         const maxNameLength = ${maxNameLength}
         const minPasswordLength = ${minPasswordLength}
@@ -49,7 +50,7 @@
                 <div class="field-container">
                     <label>
                         Эл. почта
-                        <input name="email" type="email">
+                        <input name="email">
                     </label>
                     <p id="email-error-label" class="error-message">пользователь с такой электронной почтой уже зарегестрирован</p>
                 </div>

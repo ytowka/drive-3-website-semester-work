@@ -6,5 +6,6 @@ public class ValidationConfig {
     public static final int mimPasswordLength = 8;
 
     public static final String emailRegexPattern = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
+    public static final String usernameRegexPattern = "[A-z0-9_-]+";
 
 }

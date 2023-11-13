@@ -1,9 +1,11 @@
 package org.danilkha.entrypoint;
 
 import com.danilkha.service.AuthenticationServiceImpl;
+import com.danilkha.service.UserServiceImpl;
 import org.danilkha.ConnectionProvider;
 import org.danilkha.dao.UserDao;
 import org.danilkha.services.AuthenticationService;
+import org.danilkha.services.UserService;
 import org.danilkha.utils.*;
 
 import javax.servlet.ServletContext;
@@ -13,23 +15,29 @@ import java.security.NoSuchAlgorithmException;
 public class ServiceLocator {
 
     public static final String AUTH_SERVICE = "auth_service";
+    public static final String USER_SERVICE = "user_service";
+
     public static final String USER_PROFILE_PICS_PATH = "/pictures";
     public static final String PROPERTY_FILE = "local.properties";
 
     private final ServletContext servletContext;
+    private final PropertyReader propertyReader;
 
     protected ServiceLocator(ServletContext servletContext) {
         this.servletContext = servletContext;
+        propertyReader = providePropertyReader();
     }
 
-    protected AuthenticationService provideAuthenticationService(
-            String basePath
-    ){
+    protected AuthenticationService provideAuthenticationService(){
         return new AuthenticationServiceImpl(
             provideUserDao(),
-                provideFileProvider(basePath+USER_PROFILE_PICS_PATH),
+                provideFileProvider(USER_PROFILE_PICS_PATH),
                 providePasswordEncoder()
         );
+    }
+
+    protected UserService provideUserService(){
+        return new UserServiceImpl(USER_PROFILE_PICS_PATH);
     }
     protected FileProvider provideFileProvider(String basePath){
         return new FileProvider(basePath, provideCodeGenerator());

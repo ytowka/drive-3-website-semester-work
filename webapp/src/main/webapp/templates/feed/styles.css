@@ -1,0 +1,29 @@
+.container{
+    padding-top: 60px;
+    padding-bottom: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.content{
+    width: var(--content-width);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.post-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    width: 100%;
+    padding: 30px;
+    gap: 30px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background: var(--backround);
+    border-radius: 20px;
+}

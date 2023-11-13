@@ -1,7 +1,6 @@
-
 <meta charset="UTF-8"><link href="${contextPath}/templates/auth/styles.css" rel="stylesheet" type="text/css" />
 <#import "/macros/base-page.ftl" as ui/>
-<@ui.page selectedTab = "" title="sign up">
+<@ui.page selectedTab = "" title="sign up" userAvatar=userAvatar!"">
     <script >
         const contextPath = "${contextPath}"
     </script>

@@ -22,16 +22,22 @@ public class AuthServletFilter extends HttpFilter {
         AuthenticationService authenticationService = (AuthenticationService) getServletContext().getAttribute(ServiceLocator.AUTH_SERVICE);
         UserDto currentUser = (UserDto) req.getSession().getAttribute(USER_ATTRIBUTE);
         if(currentUser != null){
+            System.out.println("current user not null");
             chain.doFilter(req, res);
             return;
         }
         for(Cookie cookie : req.getCookies()){
             if(cookie.getName().equals(COOKIE_CREDENTIALS)){
+                System.out.println("cookies user not null");
                 Result<UserDto> result = authenticationService.fastAuth(cookie.getValue());
                 if(result instanceof Result.Success<UserDto> success){
+                    System.out.println("success auth");
                     req.getSession().setAttribute(USER_ATTRIBUTE, success.getData());
                     break;
+                }else{
+                    System.out.println("bad auth");
                 }
+
             }
         }
         chain.doFilter(req, res);

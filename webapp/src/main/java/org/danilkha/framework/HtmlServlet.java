@@ -4,8 +4,13 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.danilkha.ContentTypes;
+import org.danilkha.dto.UserDto;
+import org.danilkha.entrypoint.AuthServletFilter;
+import org.danilkha.entrypoint.ServiceLocator;
 import org.danilkha.freemarker.FreemarkerConfiguration;
+import org.danilkha.services.UserService;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +21,14 @@ import java.util.Map;
 
 public abstract class HtmlServlet extends HttpServlet {
 
+    private UserService userService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userService = (UserService) config.getServletContext().getAttribute(ServiceLocator.USER_SERVICE);
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType(ContentTypes.HTML);
@@ -23,6 +36,14 @@ public abstract class HtmlServlet extends HttpServlet {
         Configuration freemarkerCfg = FreemarkerConfiguration.getConfig(getServletContext());
         Map<String, Object> root = new HashMap<>();
         root.put("contextPath", getServletContext().getContextPath());
+        UserDto userDto = (UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
+        root.put("isUserLoggedIn", userDto != null);
+        System.out.println("userDto: "+userDto);
+        if(userDto != null){
+            String avatarUri = userDto.avatarUri();
+            System.out.println(userService.getUserAvatarPath(avatarUri));
+            root.put("userAvatar", userService.getUserAvatarPath(avatarUri));
+        }
         Template template = buildPage(req, freemarkerCfg, root);
         try {
             template.process(root, resp.getWriter());

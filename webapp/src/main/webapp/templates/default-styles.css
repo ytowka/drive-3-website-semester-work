@@ -12,6 +12,8 @@
 
     --text-color: #040404;
     --contrast-text-color: #fcfcfc;
+
+    --content-width: 1080px;
 }
 
 body, html {

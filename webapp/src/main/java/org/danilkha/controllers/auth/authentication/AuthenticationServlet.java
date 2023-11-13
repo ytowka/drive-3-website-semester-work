@@ -23,6 +23,16 @@ import java.util.Map;
 @MultipartConfig()
 @WebServlet(name = "sign-in", value = "/sign-in")
 public class AuthenticationServlet extends HtmlServlet {
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if(req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE) != null){
+            resp.sendRedirect("feed");
+        }else{
+            super.doGet(req, resp);
+        }
+    }
+
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
         return freemarkerCfg.getTemplate("auth/sign-in.ftl");

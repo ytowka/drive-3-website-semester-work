@@ -5,6 +5,7 @@ function openFileSelector() {
 
 let uploadPicture = false;
 const usernameRe = new RegExp(usernameRegexPattern);
+const emailRe = new RegExp(emailRegexPattern)
 const maxFileSize = 1024*1024
 
 function previewImage(event) {
@@ -55,6 +56,7 @@ function processForm(e) {
     const username = form.username.value
     const name = form.firstname.value
     const surname = form.surname.value
+    const email = form.email.value
 
     const emailErrorLabel  =document.getElementById("email-error-label")
     const passwordRepeatErrorLabel = document.getElementById("password-not-match-label")
@@ -68,7 +70,7 @@ function processForm(e) {
     const isUserNameLengthOutOfRange = username.length < minNameLength || username.length > maxNameLength
     const isNameLengthOutOfRange = name.length < minNameLength || username.length > maxNameLength
     const isSurnameLengthOutOfRange = surname.length < minNameLength || username.length > maxNameLength
-
+    const isEmailNotValied = !emailRe.test(email)
     const isUserNameNotValid = !usernameRe.test(username)
 
     setVisible(passwordRepeatErrorLabel, isPasswordRepeatWrong)
@@ -76,7 +78,7 @@ function processForm(e) {
     setVisible(usernameErrorLabel, isUserNameLengthOutOfRange || isUserNameNotValid)
     setVisible(nameErrorLabel, isNameLengthOutOfRange)
     setVisible(surnameErrorLabel, isSurnameLengthOutOfRange)
-    setVisible(emailErrorLabel, false)
+    setVisible(emailErrorLabel, isEmailNotValied)
 
     if(isUserNameLengthOutOfRange){
         usernameErrorLabel.innerText = `имя пользователя должно быть от ${minNameLength} до ${maxNameLength} символов`
@@ -84,7 +86,11 @@ function processForm(e) {
         usernameErrorLabel.innerText = "имя пользователя не может содержать пробелы, только символы английского алфавиты, цифры или _ -"
     }
 
-    const haveErrors = isPasswordToShort || isPasswordRepeatWrong || isUserNameLengthOutOfRange || isNameLengthOutOfRange || isSurnameLengthOutOfRange || isUserNameNotValid
+    if(isEmailNotValied){
+        emailErrorLabel.innerText = "неверный формат электронной почты";
+    }
+
+    const haveErrors = isPasswordToShort || isPasswordRepeatWrong || isUserNameLengthOutOfRange || isNameLengthOutOfRange || isSurnameLengthOutOfRange || isUserNameNotValid || isEmailNotValied
 
 
     if(!haveErrors){
@@ -110,6 +116,7 @@ function processForm(e) {
                 usernameErrorLabel.innerText = "имя пользователя уже занято"
                 setVisible(usernameErrorLabel, true)
             } else if(data.message === "email-already-used"){
+                emailErrorLabel.innerText = "пользователь с такой электронной почтой уже зарегестрирован"
                 setVisible(emailErrorLabel, true)
             } else{
 

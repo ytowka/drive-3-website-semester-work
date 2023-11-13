@@ -1,4 +1,4 @@
-<#macro page selectedTab title="title">
+<#macro page selectedTab userAvatar="" title="title">
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -8,16 +8,16 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;900&display=swap" rel="stylesheet">
         <script src="${contextPath}/res/jquery-3.7.1.min.js"></script>
-        <#import "/macros/page-blocks.ftl" as ui/>
+        <#import "/macros/header.ftl" as ui/>
         <meta charset="UTF-8">
         <title>${title}</title>
     </head>
     <body>
-    <@ui.header selectedTab = ""/>
+    <@ui.header selectedTab = "" userAvatar = userAvatar/>
     <div style="padding-top: 60px">
         <#nested>
     </div>
-    <@ui.footer />
+    <#include "/footer.ftl">
     </body>
     </html>
 </#macro>
