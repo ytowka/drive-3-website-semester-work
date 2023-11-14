@@ -14,19 +14,6 @@ import java.util.*;
 public class FeedServlet extends HtmlServlet {
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
-        List<PostDto> postDtoList = new ArrayList<>();
-
-        for (int i = 0; i < 20; i++) {
-            postDtoList.add(new PostDto(
-                    UUID.randomUUID(),
-                    new Date(),
-                    UUID.randomUUID(),
-                    UUID.randomUUID(),
-                    UUID.randomUUID(),
-                    "content "+i
-            ));
-        }
-        root.put("posts", postDtoList);
         return freemarkerCfg.getTemplate("feed/feed.ftl");
     }
 }

@@ -11,6 +11,7 @@
     --error-color: #be0000;
 
     --text-color: #040404;
+    --subtext-color: #464646;
     --contrast-text-color: #fcfcfc;
 
     --content-width: 1080px;
@@ -34,6 +35,15 @@ form{
 a {
     font-family: 'Montserrat', sans-serif;
     font-weight: 700;
+    padding: 0;
+    margin: 0;
+}
+
+p{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
 }
 
 .main-content{
