@@ -5,6 +5,7 @@
             <a class="header-label" href="feed">Лента</a>
             <a class="header-label" href="users">Пользователи</a>
             <a class="header-label" href="search">Поиск</a>
+            <a class="header-label" href="cars">Автомобили</a>
             <#if userAvatar?has_content>
                 <a class="header-label" href="new-post">написать пост</a>
             </#if>
