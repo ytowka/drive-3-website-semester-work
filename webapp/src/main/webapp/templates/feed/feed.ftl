@@ -7,5 +7,6 @@
 
         </div>
     </div>
+    <script src="${contextPath}/templates/posts-script.js"></script>
     <script src="${contextPath}/templates/feed/scripts.js"></script>
 </@ui.page>
