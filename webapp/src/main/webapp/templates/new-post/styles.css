@@ -1,0 +1,50 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 50px;
+}
+
+textarea{
+    width: 100%;
+    resize: vertical;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.car-image{
+    width: 100%;
+    object-fit: cover;
+    padding: 100px;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.post-content{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 32px;
+    box-sizing: border-box;
+}
+
+select{
+    height: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: large;
+}
+
+option{
+    height: 50px;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+
+.error-message{
+    display: none;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--error-color);
+    width: 100%;
+}

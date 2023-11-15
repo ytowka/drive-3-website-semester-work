@@ -1,0 +1,78 @@
+textarea{
+    width: 100%;
+    resize: vertical;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.post-container{
+    padding: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 16px;
+}
+
+.post-text{
+    padding: 16px;
+    width: 100%;
+    text-align: start;
+    box-sizing: border-box;
+}
+
+.comment-block{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.comment-list{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.comment{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    gap: 8px;
+}
+
+.comment-text{
+    width: 100%;
+    text-align: start;
+    box-sizing: border-box;
+    padding: 0 0 0 72px;
+}
+
+hr.solid {
+    background: #bbb;
+    border-radius: 1px;
+    height: 1px;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+
+.error-message{
+    display: none;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--error-color);
+    width: 100%;
+}
