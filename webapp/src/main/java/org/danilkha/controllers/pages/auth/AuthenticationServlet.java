@@ -1,4 +1,4 @@
-package org.danilkha.controllers.auth.authentication;
+package org.danilkha.controllers.pages.auth;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

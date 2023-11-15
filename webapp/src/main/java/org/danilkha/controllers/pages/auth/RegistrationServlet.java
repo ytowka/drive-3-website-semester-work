@@ -1,4 +1,4 @@
-package org.danilkha.controllers.auth.registration;
+package org.danilkha.controllers.pages.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.Configuration;

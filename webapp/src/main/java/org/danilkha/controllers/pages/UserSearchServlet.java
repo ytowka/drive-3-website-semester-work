@@ -1,4 +1,4 @@
-package org.danilkha.controllers;
+package org.danilkha.controllers.pages;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -9,12 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Map;
 
-@WebServlet(name = "profile", value = "/profile/*")
-public class ProfileServlet extends HtmlServlet {
+@WebServlet(name = "users", value = "/users")
+public class UserSearchServlet extends HtmlServlet {
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
-        System.out.println(req.getServletPath());
-        System.out.println(req.getServletContext().getServerInfo());
-        return freemarkerCfg.getTemplate("profile/profile.ftl");
+        root.put("apiPath", "http://localhost:8080%s/api/users".formatted(getServletContext().getContextPath()));
+        return freemarkerCfg.getTemplate("users/user-search.ftl");
     }
 }

@@ -29,6 +29,13 @@
     align-items: center;
 }
 
+.subs-buttons{
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    align-items: center;
+}
+
 .profile-container {
     display: flex;
     flex-direction: column;

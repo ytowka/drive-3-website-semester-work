@@ -10,7 +10,7 @@
             </#if>
             <div class="spacer"></div>
             <#if userAvatar?has_content>
-                <a href="profile">
+                <a href="http://localhost:8080${contextPath}/profile">
                     <img class="user-avatar" src="${userAvatar}"/>
                 </a>
             <#else>

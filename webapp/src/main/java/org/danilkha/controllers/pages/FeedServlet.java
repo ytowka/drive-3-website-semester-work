@@ -1,4 +1,4 @@
-package org.danilkha.controllers.feed;
+package org.danilkha.controllers.pages;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -14,6 +14,11 @@ import java.util.*;
 public class FeedServlet extends HtmlServlet {
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
+        root.put("feedApiPath", "http://localhost:8080%s/api/feed".formatted(getServletContext().getContextPath()));
+        String topic = req.getParameter("car");
+        if(topic != null){
+            root.put("topic", topic);
+        }
         return freemarkerCfg.getTemplate("feed/feed.ftl");
     }
 }

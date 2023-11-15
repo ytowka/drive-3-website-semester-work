@@ -14,7 +14,7 @@
     </head>
     <body>
     <@ui.header selectedTab = "" userAvatar = userAvatar/>
-    <div style="padding-top: 60px">
+    <div style="padding-top: 60px; display: flex; justify-content: center">
         <#nested>
     </div>
     <#include "/footer.ftl">

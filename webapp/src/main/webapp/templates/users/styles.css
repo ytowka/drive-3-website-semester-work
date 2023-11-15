@@ -1,0 +1,61 @@
+.user-card{
+    display: flex;
+    align-items: center;
+    margin: 0;
+    width: 80%;
+    padding: 16px;
+    gap: 16px;
+    box-sizing: border-box;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
+    background: var(--backround);
+    border-radius: 20px;
+}
+
+.title{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: x-large;
+}
+
+.search-field{
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: x-large;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.user-search-avatar{
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    justify-self: end;
+    border-radius: 50%;
+}
+
+.user-list{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding: 50px;
+    gap: 16px;
+}
+
+.user-info{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.user-name{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+}
+
+.user-actual-name{
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    color: var(--subtext-color);
+}

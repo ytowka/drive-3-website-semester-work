@@ -1,4 +1,4 @@
-package org.danilkha.controllers.feed;
+package org.danilkha.controllers.api.feed;
 
 import java.util.List;
 

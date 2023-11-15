@@ -8,7 +8,7 @@ public record PostDto(
         Date datetime,
         UUID authorId,
         UUID topicId,
-        UUID carBrandId,
+        String picture,
         String content
 ) {
 

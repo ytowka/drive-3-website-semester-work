@@ -38,10 +38,8 @@ public abstract class HtmlServlet extends HttpServlet {
         root.put("contextPath", getServletContext().getContextPath());
         UserDto userDto = (UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
         root.put("isUserLoggedIn", userDto != null);
-        System.out.println("userDto: "+userDto);
         if(userDto != null){
             String avatarUri = userDto.avatarUri();
-            System.out.println(userService.getUserAvatarPath(avatarUri));
             root.put("userAvatar", userService.getUserAvatarPath(avatarUri));
         }
         Template template = buildPage(req, freemarkerCfg, root);
