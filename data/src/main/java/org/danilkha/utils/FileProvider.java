@@ -20,6 +20,13 @@ public class FileProvider {
         this.codeGenerator = codeGenerator;
     }
 
+    public void makeDir(String directory){
+        File f = new File(basePath+"/"+directory);
+        if(!f.exists()){
+            f.mkdir();
+        }
+    }
+
     /**
      *
      * @param inputStream

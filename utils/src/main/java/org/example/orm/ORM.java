@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ORM {
 
@@ -47,6 +48,22 @@ public class ORM {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static <T> Optional<T> parseOptionalResultSet(ResultSet resultSet, Class<T> objectClass) throws SQLException {
+        if(resultSet.next()){
+            return Optional.of(parseResultSet(resultSet, objectClass));
+        }
+        return Optional.empty();
+    }
+
+
+    public static <T> List<T> parseResultSetList(ResultSet resultSet, Class<T> objectClass) throws SQLException {
+        List<T> list = new ArrayList<>();
+        while (resultSet.next()){
+            list.add(parseResultSet(resultSet, objectClass));
+        }
+        return list;
     }
 
     protected static String appendValues(Field[] columns, Object object) {

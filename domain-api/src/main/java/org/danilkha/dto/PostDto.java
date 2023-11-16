@@ -6,10 +6,8 @@ import java.util.UUID;
 public record PostDto(
         UUID id,
         Date datetime,
-        UUID authorId,
-        UUID topicId,
+        UserDto author,
+        TopicDto topic,
         String picture,
         String content
-) {
-
-}
+) { }

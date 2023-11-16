@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface PostsService {
 
-    List<PostDto> getUserFeed(UUID userId, int from, int to);
+    List<PostDto> getUserFeed(UUID userId, int page);
 
     List<PostDto> getPostsByTopic(UUID topicId);
 
@@ -18,7 +18,7 @@ public interface PostsService {
 
     List<PostDto> getUserPosts(UUID id);
 
-    void writeNewPost(InputStream picture, String fileName, String text, UUID topicId);
+    UUID writeNewPost(InputStream picture, String fileName, UUID authorId, String text, UUID topicId);
 
     void changeLikeState(UUID postId, UUID userId, boolean isLiked);
 

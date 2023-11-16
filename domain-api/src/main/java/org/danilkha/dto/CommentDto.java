@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public record CommentDto(
         UUID id,
-        UUID userId,
+        UserDto userDto,
         UUID postId,
         UUID replyingId,
         Date date,
