@@ -37,7 +37,7 @@ public class ServiceLocator {
     }
 
     protected UserService provideUserService(){
-        return new UserServiceImpl(USER_PROFILE_PICS_PATH);
+        return new UserServiceImpl(USER_PROFILE_PICS_PATH, userDao);
     }
     protected FileProvider provideFileProvider(String basePath){
         return new FileProvider(basePath, provideCodeGenerator());

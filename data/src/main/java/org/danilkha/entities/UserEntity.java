@@ -23,7 +23,7 @@ public record UserEntity(
         Date registrationDate
 ) {
 
-    public UserDto toDto(){
+    public UserDto toDto(String basePicturePath){
         return new UserDto(
                 id,
                 username,
@@ -31,7 +31,7 @@ public record UserEntity(
                 surname,
                 email,
                 encodedPasswordHash,
-                avatarUri,
+                basePicturePath+"/"+avatarUri,
                 registrationDate
         );
     }

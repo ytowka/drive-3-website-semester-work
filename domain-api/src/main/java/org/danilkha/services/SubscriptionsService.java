@@ -8,8 +8,8 @@ import java.util.UUID;
 
 public interface SubscriptionsService {
 
-    void subscribeUser(UUID from, UUID to) throws SQLException;
-    void unsubscribeUser(UUID from, UUID to) throws SQLException;
-    List<UserDto> getSubscribers(UUID userId) throws SQLException;
-    List<UserDto> getSubscriptions(UUID userId) throws SQLException;
+    void subscribeUser(UUID from, UUID to) ;
+    void unsubscribeUser(UUID from, UUID to);
+    List<UserDto> getSubscribers(UUID userId);
+    List<UserDto> getSubscriptions(UUID userId);
 }

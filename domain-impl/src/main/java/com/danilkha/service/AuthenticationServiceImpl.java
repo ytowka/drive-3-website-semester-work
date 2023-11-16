@@ -72,7 +72,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     surname,
                     email,
                     encodedPassword,
-                    avatarFileName,
+                    userAvatarFileProvider.getBasePath()+"/"+avatarFileName,
                     date
             ));
 
@@ -95,7 +95,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 byte[] passwordDecoded = passwordEncoder.decodePassword(userEntity.encodedPasswordHash());
                 boolean isPasswordCorrect = Arrays.equals(passwordDecoded, passwordEncoder.hashPassword(password));
                 if(isPasswordCorrect){
-                    return new Result.Success<>(userEntity.toDto());
+                    return new Result.Success<>(userEntity.toDto(userAvatarFileProvider.getBasePath()));
                 }
             }
             return new Result.Error<>("wrong credentials");
@@ -112,7 +112,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String password = credentials[1];
             UserEntity userEntity = userDao.getByUsername(login);
             if(userEntity.encodedPasswordHash().equals(password)){
-                return new Result.Success<>(userEntity.toDto());
+                return new Result.Success<>(userEntity.toDto(userAvatarFileProvider.getBasePath()));
             }else{
                 return new Result.Error<>("wrong cookies");
             }

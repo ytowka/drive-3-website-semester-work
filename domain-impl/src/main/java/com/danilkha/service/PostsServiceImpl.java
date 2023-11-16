@@ -31,6 +31,7 @@ public class PostsServiceImpl implements PostsService {
 
     private final String baseTopicPicturesPath;
     private final String basePostsPicturesPath;
+    private final String baseAvatarPicturesPath;
 
     private final FileProvider fileProvider;
 
@@ -41,7 +42,7 @@ public class PostsServiceImpl implements PostsService {
             TopicDao topicDao,
             SubscriptionsDao subscriptionsDao,
             int pageSize,
-            String baseTopicPicturesPath, String basePostsPicturesPath, FileProvider fileProvider) {
+            String baseTopicPicturesPath, String basePostsPicturesPath, String baseAvatarPicturesPath, FileProvider fileProvider) {
         this.userDao = userDao;
         this.postDao = postDao;
         this.likesDao = likesDao;
@@ -51,6 +52,7 @@ public class PostsServiceImpl implements PostsService {
         this.pageSize = pageSize;
         this.baseTopicPicturesPath = baseTopicPicturesPath;
         this.basePostsPicturesPath = basePostsPicturesPath;
+        this.baseAvatarPicturesPath = baseAvatarPicturesPath;
         this.fileProvider = fileProvider;
     }
     @Override
@@ -85,7 +87,7 @@ public class PostsServiceImpl implements PostsService {
                     topicEntity.name(),
                     baseTopicPicturesPath+"/"+topicEntity.picture()
             );
-            UserDto userDto = userDao.getById(postEntityOptional.get().authorId()).toDto();
+            UserDto userDto = userDao.getById(postEntityOptional.get().authorId()).toDto(baseAvatarPicturesPath);
             return new PostDto(
                     postEntityOptional.get().id(),
                     postEntityOptional.get().datetime(),
@@ -158,7 +160,7 @@ public class PostsServiceImpl implements PostsService {
                 UserDto userDto = userDtoMap.get(commentEntity.userId());
                 if(userDto == null){
                     try {
-                        userDto = userDao.getById(commentEntity.userId()).toDto();
+                        userDto = userDao.getById(commentEntity.userId()).toDto(baseAvatarPicturesPath);
                         userDtoMap.put(commentEntity.userId(), userDto);
                     } catch (SQLException e) {
                         throw new RuntimeException(e);
@@ -217,7 +219,7 @@ public class PostsServiceImpl implements PostsService {
             UserDto userDto = userDtoMap.get(postEntity.authorId());
             if(userDto == null){
                 try {
-                    userDto = userDao.getById(postEntity.authorId()).toDto();
+                    userDto = userDao.getById(postEntity.authorId()).toDto(baseAvatarPicturesPath);
                     userDtoMap.put(postEntity.authorId(), userDto);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
