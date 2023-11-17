@@ -4,6 +4,7 @@
     <script>
         const contextPath = "${contextPath}"
         const feedApiPath = "${feedApiPath}"
+        const userId = "${userId!''}"
     </script>
     <div class="container">
         <#if topic?has_content>
@@ -14,5 +15,10 @@
         </div>
     </div>
     <script src="${contextPath}/templates/posts-script.js"></script>
-    <script src="${contextPath}/templates/feed/scripts.js"></script>
+    <#if topic?has_content>
+        <script>loadPosts(feedApiPath);</script>
+    <#else>
+        <script src="${contextPath}/templates/feed/scripts.js"></script>
+    </#if>
+
 </@ui.page>

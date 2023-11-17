@@ -7,9 +7,6 @@
     </script>
     <div class="content">
         <h1 class="title">Подписки</h1>
-        <div class="user-card">
-            <input type="text" class="search-field" id="search-query">
-        </div>
         <div id="user-list" class="user-list">
 
         </div>

@@ -8,6 +8,7 @@ import org.example.orm.ORM;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
 
 public interface UserDao {
@@ -16,6 +17,8 @@ public interface UserDao {
     UserEntity getByUsername(String username) throws SQLException;
 
     UserEntity getById(UUID uuid) throws SQLException;
+
+    List<UserEntity> search(String query) throws SQLException;
 
     UUID create(UserEntity userEntity) throws SQLException;
 
@@ -37,6 +40,9 @@ public interface UserDao {
         private static final String SELECT_BY_USERNAME_QUERY = "SELECT * FROM account WHERE username = ?";
         //language=SQL
         private static final String SELECT_QUERY = "SELECT * FROM account WHERE id = ?";
+
+        //language=SQL
+        private static final String SEARCH_QUERY = "SELECT * FROM account WHERE username like ? or name like ?  or surname like ?";
 
         //language=SQL
         private static final String DELETE_QUERY = "DELETE FROM account WHERE id = ?";
@@ -77,6 +83,18 @@ public interface UserDao {
                 return ORM.parseResultSet(resultSet, UserEntity.class);
             }
             return null;
+        }
+
+        @Override
+        public List<UserEntity> search(String query) throws SQLException {
+            System.out.println("dao search "+query);
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(SEARCH_QUERY);
+            String sqlQuery = "%"+query+"%";
+            statement.setObject(1, sqlQuery);
+            statement.setObject(2, sqlQuery);
+            statement.setObject(3, sqlQuery);
+            ResultSet resultSet = statement.executeQuery();
+            return ORM.parseResultSetList(resultSet, UserEntity.class);
         }
 
         @Override

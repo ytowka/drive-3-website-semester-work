@@ -4,17 +4,30 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.danilkha.ConnectionProvider;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionPool {
-    private final BasicDataSource dataSource;
+    //private final BasicDataSource dataSource;
 
     private static final String HOST = "jdbc:postgresql://localhost:5432/car_configurator_database";
     private static final String USER = "postgres";
     private static final String PASS = "admin";
 
+    Connection connection;
+
     public ConnectionPool(){
-        dataSource = new BasicDataSource();
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            connection = DriverManager.getConnection(HOST, USER, PASS);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+       /* dataSource = new BasicDataSource();
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -30,16 +43,12 @@ public class ConnectionPool {
 
         dataSource.setMaxTotal(10); // Maximum number of active connections in the pool
         dataSource.setMaxIdle(5); // Maximum number of idle connections in the pool
-        dataSource.setMinIdle(2); // Minimum number of idle connections in the pool
+        dataSource.setMinIdle(2); // Minimum number of idle connections in the pool*/
     }
 
     public ConnectionProvider getConnectionProvider(){
         return () -> {
-            try {
-                return dataSource.getConnection();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            return connection;
         };
     }
 }

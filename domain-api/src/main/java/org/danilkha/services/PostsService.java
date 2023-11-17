@@ -11,8 +11,9 @@ import java.util.UUID;
 public interface PostsService {
 
     List<PostDto> getUserFeed(UUID userId, int page);
+    List<PostDto> getAllFeed(int page);
 
-    List<PostDto> getPostsByTopic(UUID topicId);
+    List<PostDto> getPostsByTopic(String name);
 
     PostDto getPostById(UUID postId);
 

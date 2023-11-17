@@ -7,4 +7,6 @@ import java.util.UUID;
 
 public interface UserService {
     UserDto getUserById(UUID id);
+
+    List<UserDto> searchUser(String query);
 }

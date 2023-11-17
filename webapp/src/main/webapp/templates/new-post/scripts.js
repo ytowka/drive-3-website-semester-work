@@ -40,8 +40,9 @@ function processForm(e) {
             contentType: false,
             method: 'POST',
             success: function (data) {
+                let response = JSON.parse(data)
                 console.log(data)
-                window.location.href = "feed";
+                window.location.href = `http://localhost:8080${contextPath}/post/${response.id}`;
             },
         })
     }

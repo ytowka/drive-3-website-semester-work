@@ -4,8 +4,14 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.danilkha.dto.UserDto;
 import org.danilkha.entrypoint.AuthServletFilter;
+import org.danilkha.entrypoint.ServiceLocator;
 import org.danilkha.framework.HtmlServlet;
+import org.danilkha.services.SubscriptionsService;
+import org.danilkha.services.UserService;
+import org.danilkha.utils.DateFormatter;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +21,16 @@ import java.util.UUID;
 
 @WebServlet(name = "profile", value = "/profile/*")
 public class ProfileServlet extends HtmlServlet {
+
+    UserService userService;
+    SubscriptionsService subscriptionsService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        userService = (UserService) config.getServletContext().getAttribute(ServiceLocator.USER_SERVICE);
+        subscriptionsService = (SubscriptionsService) config.getServletContext().getAttribute(ServiceLocator.SUBSCRIPTIONS_SERVICE);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -28,19 +44,21 @@ public class ProfileServlet extends HtmlServlet {
 
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
-        System.out.println(req.getPathInfo());
         String userId = req.getPathInfo().split("/")[1];
-        UserDto userDto = (UserDto)req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
+        UserDto currentUser = (UserDto)req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
+        boolean isCurrentUser = currentUser != null && currentUser.id().toString().equals(userId);
 
-        root.put("feedApiPath", "http://localhost:8080%s/api/feed?user=%S".formatted(getServletContext().getContextPath(),userId));
-        root.put("isCurrentUser", userDto.id().toString().equals(userId));
-        root.put("subscriptionsCount",10);
-        root.put("subscribersCount",20);
-        root.put("userId", userId);
+
+        UserDto user = userService.getUserById(UUID.fromString(userId));
+
+        root.put("feedApiPath", "http://localhost:8080%s/api/feed".formatted(getServletContext().getContextPath()));
+        root.put("isCurrentUser", isCurrentUser);
+        root.put("subscriptionsCount", subscriptionsService.getSubscriptions(user.id()).size());
+        root.put("subscribersCount", subscriptionsService.getSubscribers(user.id()).size());
         root.put("username", userId);
-        root.put("realName", userDto.firstname()+" "+userDto.surname());
-        root.put("registrationDate", userDto.registrationDate().toString());
-        root.put("avatar", userDto.avatarUri());
+        root.put("user", user);
+        root.put("isLoggedIn", currentUser != null);
+        root.put("regDate", DateFormatter.formatDate(user.registrationDate()));
         return freemarkerCfg.getTemplate("profile/profile.ftl");
     }
 }

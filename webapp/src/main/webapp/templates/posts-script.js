@@ -11,7 +11,9 @@ function loadPosts(url) {
         $.ajax({
             url: url,
             method: 'GET',
-            data: {page: loadingPage},
+            data: {
+                page: loadingPage
+            },
             success: function(data) {
                 let object = JSON.parse(data)
                 console.log("loaded page "+object.page)
@@ -60,22 +62,98 @@ function loadPosts(url) {
             }
         });
     }
+}
+
+function loadUserPosts(url, id) {
+    if(loadingPage !== currentPage){
+        loadingPage = currentPage+1
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            data: {
+                userId: id
+            },
+            success: function(data) {
+                let object = JSON.parse(data)
+                console.log("loaded page "+object.page)
+                currentPage = object.page
+                if (object.posts.length > 0) {
+                    object.posts.forEach((post) => {
+                        let postElement = document.createElement('div');
+                        postElement.style.display = 'flex'
+                        postElement.style.justifyContent = 'center'
+                        postElement.style.padding = '0'
+                        postElement.style.margin = '0'
+                        postElement.style.width = '100%'
+
+                        let likeIconClass = ""
+
+                        likeMap.set(post.id, post.isLiked)
+                        if(post.isLiked){
+                            likeIconClass = "post-action-icon-clicked"
+                        }else{
+                            likeIconClass = "post-action-icon"
+                        }
+
+                        postElement.innerHTML = createPostCard(
+                            post.id,
+                            post.avatarUrl,
+                            post.author,
+                            post.authorUrl,
+                            post.image,
+                            post.text,
+                            post.date,
+                            post.likeCount,
+                            likeIconClass,
+                            post.topicUrl,
+                            post.topicName
+                        )
+                        document.getElementById('posts-list').appendChild(postElement);
+                    })
+                } else {
+                    loadedAll = true
+                }
+            },
+            error: function() {
+
+            },
+            complete: function (){
+                loadingPage = null
+            }
+        });
+    }
 
 }
 
 function onLike(id){
-    console.log("like "+id)
-    const icon = document.getElementById(`likeIcon${id}`)
-    const count = document.getElementById(`likeCount${id}`)
-    isLiked = likeMap.get(id);
-    if(isLiked){
-        icon.style.filter = "invert(1)"
-        count.innerText = (parseInt(count.innerText) - 1).toString()
+    if(userId.length > 0){
+        console.log("like "+id)
+        const icon = document.getElementById(`likeIcon${id}`)
+        const count = document.getElementById(`likeCount${id}`)
+        isLiked = likeMap.get(id);
+        if(isLiked){
+            icon.style.filter = "invert(1)"
+            count.innerText = (parseInt(count.innerText) - 1).toString()
+        }else{
+            icon.style.filter = "invert(0.5) sepia(1) saturate(10) hue-rotate(320deg)"
+            count.innerText = (parseInt(count.innerText) + 1).toString()
+        }
+        likeMap.set(id, !isLiked)
+        $.ajax({
+            url: `http://localhost:8080/${contextPath}/api/like`,
+            method: 'POST',
+            contentType: "application/x-www-form-urlencoded",
+            data: {
+                postId: id,
+                isLiked: !isLiked,
+                userId: userId,
+            },
+        });
     }else{
-        icon.style.filter = "invert(0.5) sepia(1) saturate(10) hue-rotate(320deg)"
-        count.innerText = (parseInt(count.innerText) + 1).toString()
+        window.location.href=`http://localhost:8080${contextPath}/sign-in`
     }
-    likeMap.set(id, !isLiked)
+
 }
 
 function onComment(id){
@@ -84,7 +162,7 @@ function onComment(id){
 }
 
 function createPostCard(
-    id, avatar, author, authorUrl, image, text, date, likecount, iconClass, topicLink, topicName
+    id, avatar, author, authorUrl, image, text, date, likecount, iconClass, topicLink, topicName, likeblock
 ){
     return `
 <div class="post-card">
@@ -95,15 +173,15 @@ function createPostCard(
            <p style="color: var(--subtext-color)">${date}</p>
         </div>
     </div>
-    <a href="post/${id}" target="_self">
+    <a href="http://localhost:8080${contextPath}/post/${id}" target="_self">
          <img src="${image}" class="post-image" alt="">
     </a>
-   <a class="post-text" href="post/${id}" target="_self">
+   <a class="post-text" href="http://localhost:8080${contextPath}/post/${id}" target="_self">
         <p style="margin: 16px">${text}</p> 
    </a>
   
    <div class="post-actions">
-        <a href="post/${id}" target="_self">
+        <a href="http://localhost:8080${contextPath}/post/${id}" target="_self">
             <img class="post-action-icon" src="${contextPath}/res/img/ic_comment.svg" >
         </a>
        
@@ -117,3 +195,4 @@ function createPostCard(
  </div>
     `
 }
+

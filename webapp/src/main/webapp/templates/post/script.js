@@ -10,6 +10,17 @@ function onLike(){
         icon.style.filter = "invert(0.5) sepia(1) saturate(10) hue-rotate(320deg)"
         count.innerText = (parseInt(count.innerText) + 1).toString()
     }
+
+    $.ajax({
+        url: `http://localhost:8080/${contextPath}/api/like`,
+        method: 'POST',
+        contentType: "application/x-www-form-urlencoded",
+        data: {
+            postId: postId,
+            isLiked: !isLiked,
+            userId: userId,
+        },
+    });
 }
 
 const form = document.getElementById('comment-form');
@@ -27,7 +38,8 @@ function processForm(e) {
         $.ajax({
             url: `http://localhost:8080${contextPath}/api/comment`,
             data: {
-                "text": text
+                "text": text,
+                "postId": postId,
             },
             contentType: "application/x-www-form-urlencoded",
             //contentType: false,

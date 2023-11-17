@@ -3,6 +3,7 @@
 <script>
     const contextPath = "${contextPath}"
     const postId = "${postId}"
+    const userId = "${userId!''}"
     let isLiked = "${isLiked?string}"
 </script>
 <#import "/macros/base-page.ftl" as ui/>
@@ -21,24 +22,28 @@
                 <p class="post-text">${text}</p>
 
                 <div class="post-actions">
-                    <div class="post-like-icon">
-                        <img class="<#if isLiked>post-action-icon<#else>post-action-icon-clicked</#if>" src="${contextPath}/res/img/ic_like.svg" onclick="onLike()" id="likeIcon">
-                        <p style="color: white" id="likeCount">${likeCount}</p>
-                    </div>
+                    <#if userId?has_content>
+                        <div class="post-like-icon">
+                            <img class="<#if !isLiked>post-action-icon<#else>post-action-icon-clicked</#if>" src="${contextPath}/res/img/ic_like.svg" onclick="onLike()" id="likeIcon">
+                            <p style="color: white" id="likeCount">${likeCount}</p>
+                        </div>
+                    </#if>
                     <div class="spacer"></div>
                     <a class="topic-link" href="${topicLink}">${topicName}</a>
                 </div>
             </div>
-            <div class="post-card">
-                <form method="post" class="comment-block" id="comment-form" >
-                    <label>
-                        Оставить комментарий
-                        <textarea name="text"></textarea>
-                    </label>
-                    <p class="error-message" id="text-error">Поле пустое</p>
-                    <button type="submit">Отпарвить</button>
-                </form>
-            </div>
+            <#if userId?has_content>
+                <div class="post-card">
+                    <form method="post" class="comment-block" id="comment-form" >
+                        <label>
+                            Оставить комментарий
+                            <textarea name="text"></textarea>
+                        </label>
+                        <p class="error-message" id="text-error">Поле пустое</p>
+                        <button type="submit">Отпарвить</button>
+                    </form>
+                </div>
+            </#if>
             <div class="post-card">
                 <div class="comment-list">
                     <#list comments as comment>

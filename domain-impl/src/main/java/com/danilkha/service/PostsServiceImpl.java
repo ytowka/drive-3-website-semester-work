@@ -59,6 +59,7 @@ public class PostsServiceImpl implements PostsService {
     public List<PostDto> getUserFeed(UUID userId, int page) {
         try {
             List<UUID> userSubs = subscriptionsDao.getSubscriptionsIds(userId);
+            userSubs.add(userId);
             List<PostEntity> postEntities = postDao.getPostByUserList(userSubs, page * pageSize, pageSize);
             return mapPosts(postEntities);
         } catch (SQLException e) {
@@ -67,9 +68,20 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    public List<PostDto> getPostsByTopic(UUID topicId) {
+    public List<PostDto> getAllFeed(int page) {
         try {
-            List<PostEntity> postEntities = postDao.getPostByTopic(topicId);
+            List<PostEntity> postEntities = postDao.getPostList(page * pageSize, pageSize);
+            return mapPosts(postEntities);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<PostDto> getPostsByTopic(String name) {
+        try {
+            TopicEntity topicEntity = topicDao.getTopicByName(name).get();
+            List<PostEntity> postEntities = postDao.getPostByTopic(topicEntity.id());
             return mapPosts(postEntities);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -124,8 +136,9 @@ public class PostsServiceImpl implements PostsService {
         try {
             UUID postId = postDao.createNewPost(postEntity);
             if(picture != null){
-                fileProvider.makeDir(postId.toString());
-                fileProvider.saveFile(picture, fileName);
+                String postPath = basePostsPicturesPath+"/"+postId.toString();
+                fileProvider.makeDir(postPath);
+                fileProvider.savePlainFile(picture, postPath+"/"+fileName);
             }
             return postId;
         } catch (SQLException | IOException e) {
@@ -139,6 +152,7 @@ public class PostsServiceImpl implements PostsService {
             likesDao.changeLikeStatus(new LikeStatusEntity(
                     postId, userId, isLiked));
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
@@ -192,6 +206,7 @@ public class PostsServiceImpl implements PostsService {
                     text
             ));
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

@@ -3,32 +3,63 @@ package org.danilkha.controllers.pages;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.danilkha.controllers.api.comments.CommentResponse;
+import org.danilkha.dto.CommentDto;
+import org.danilkha.dto.PostDto;
+import org.danilkha.dto.UserDto;
+import org.danilkha.entrypoint.AuthServletFilter;
+import org.danilkha.entrypoint.ServiceLocator;
 import org.danilkha.framework.HtmlServlet;
+import org.danilkha.services.PostsService;
+import org.danilkha.utils.DateFormatter;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @WebServlet(name = "post", value = "/post/*")
 public class PostServlet extends HtmlServlet {
+
+    PostsService postsService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        postsService = (PostsService) config.getServletContext().getAttribute(ServiceLocator.POST_SERVICE);
+    }
+
     @Override
     public Template buildPage(HttpServletRequest req, Configuration freemarkerCfg, Map<String, Object> root) throws IOException {
         String postId = req.getPathInfo().split("/")[1];
-        int likeCount = 10;
-        boolean isLiked = true;
-        String topicLink = "topicLink";
-        String topicName = "topic";
-        String date = "date";
-        String authorUrl = "authorUrl";
-        String author = "author";
-        String avatar = "avatar";
-        String image = "/cars/vw.jpg";
-        String text = "text";
+        PostDto postDto = postsService.getPostById(UUID.fromString(postId));
+
+        UserDto userDto = (UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
+
+        List<UUID> likes = postsService.getPostLikes(UUID.fromString(postId));
+        int likeCount = likes.size();
+
+        boolean isLiked = false;
+
+        if(userDto != null){
+            System.out.println(likes);
+            System.out.println(isLiked);
+            isLiked = likes.contains(userDto.id());
+        }
+
+        String basePage = "http://localhost:8080%s".formatted(getServletContext().getContextPath());
+
+        String topicLink = basePage+"/feed?topic="+postDto.topic().name();
+        String topicName = postDto.topic().name();
+        String date = DateFormatter.formatDateTime(postDto.datetime());
+        String authorUrl = basePage+"/profile/"+postDto.author().id();
+        String author = postDto.author().username();
+        String avatar = postDto.author().avatarUri();
+        String image = postDto.picture();
+        String text = postDto.content();
 
         root.put("postId", postId);
         root.put("likeCount", likeCount);
@@ -41,18 +72,26 @@ public class PostServlet extends HtmlServlet {
         root.put("avatar", avatar);
         root.put("image",image);
         root.put("text", text);
-
-        List<CommentResponse> commentResponseList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            commentResponseList.add(new CommentResponse(
-                    "/pictures/AUIJYZsoQaomHw==1699868967299ZGFuaWxraGEt0KHQvdC40LzQvtC6INGN0LrRgNCw0L3QsCAyMDIzLTAzLTI0IDIzMDE0NC5wbmc=.png",
-                    "name",
-                    "14.03.2023",
-                    "http://localhost:8080/drive3/profile/532d5e2a-4e1c-41df-a7d6-df412189d486",
-                    "awesome "+i
-            ));
+        if(userDto != null){
+            root.put("userId", userDto.id());
         }
-        root.put("comments", commentResponseList);
+
+        System.out.println("post id" +postId);
+
+        List<CommentResponse> commentDtoList = postsService.getPostComments(UUID.fromString(postId)).stream().map(commentDto ->{
+            return new CommentResponse(
+                    commentDto.userDto().avatarUri(),
+                    commentDto.userDto().username(),
+                    DateFormatter.formatDateTime(commentDto.date()),
+                    basePage+"/profile/"+commentDto.userDto().id(),
+                    commentDto.text()
+            );
+        }).toList();
+
+        System.out.println(commentDtoList.size());
+
+
+        root.put("comments", commentDtoList);
         return freemarkerCfg.getTemplate("post/post.ftl");
     }
 }

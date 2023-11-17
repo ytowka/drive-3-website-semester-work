@@ -34,7 +34,6 @@ public class TestTopicDao {
     void getAllWorks() throws SQLException {
         Assertions.assertDoesNotThrow(() -> {
             List<TopicEntity> list = topicDao.getAllTopics();
-            System.out.println(Arrays.toString(list.toArray()));
         });
     }
 

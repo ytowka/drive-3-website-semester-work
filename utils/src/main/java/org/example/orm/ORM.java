@@ -98,7 +98,6 @@ public class ORM {
         if (typeConverter != null) {
             value = typeConverter.toDatabaseType(value);
         }
-        System.out.println(value);
         if(value == null){
             return "NULL";
         }

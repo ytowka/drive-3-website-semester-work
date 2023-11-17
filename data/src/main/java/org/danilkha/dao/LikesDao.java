@@ -34,12 +34,17 @@ public interface LikesDao {
 
         @Override
         public void changeLikeStatus(LikeStatusEntity likeStatus) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(UPDATE);
-            statement.setObject(1, likeStatus.postId());
-            statement.setObject(2, likeStatus.userId());
-            statement.setBoolean(3, likeStatus.isLiked());
-            statement.setBoolean(4, likeStatus.isLiked());
-            statement.executeUpdate();
+            try {
+                PreparedStatement statement = connectionProvider.provide().prepareStatement(UPDATE);
+                statement.setObject(1, likeStatus.postId());
+                statement.setObject(2, likeStatus.userId());
+                statement.setBoolean(3, likeStatus.isLiked());
+                statement.setBoolean(4, likeStatus.isLiked());
+                statement.executeUpdate();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
 
         @Override
@@ -57,14 +62,21 @@ public interface LikesDao {
 
         @Override
         public List<UUID> getPostLikes(UUID postId) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(LIKE_COUNT);
-            statement.setObject(1, postId);
-            ResultSet resultSet = statement.executeQuery();
-            List<UUID> likes = new ArrayList<>();
-            while (resultSet.next()){
-                likes.add((UUID) resultSet.getObject("user_id"));
+
+            try {
+                PreparedStatement statement = connectionProvider.provide().prepareStatement(LIKE_COUNT);
+                statement.setObject(1, postId);
+                ResultSet resultSet = statement.executeQuery();
+                List<UUID> likes = new ArrayList<>();
+                while (resultSet.next()){
+                    likes.add((UUID) resultSet.getObject("user_id"));
+                }
+                return likes;
+            }catch (Exception e){
+                e.printStackTrace();
+                throw e;
             }
-            return likes;
+
         }
     }
 }

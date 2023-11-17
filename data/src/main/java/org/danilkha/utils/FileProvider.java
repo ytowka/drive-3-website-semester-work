@@ -21,9 +21,10 @@ public class FileProvider {
     }
 
     public void makeDir(String directory){
-        File f = new File(basePath+"/"+directory);
+        File f = new File(basePath+directory);
+
         if(!f.exists()){
-            f.mkdir();
+            f.mkdirs();
         }
     }
 
@@ -33,7 +34,18 @@ public class FileProvider {
      * @return saved file username
      * @throws IOException
      */
-    public String saveFile(InputStream inputStream, String originalName) throws IOException {
+
+    public void savePlainFile(InputStream inputStream, String path) throws IOException {
+        File f = new File(basePath+path);
+        if(!f.exists()) {
+            f.createNewFile();
+        }
+        try(FileOutputStream fileOutputStream = new FileOutputStream(f)) {
+            fileOutputStream.write(inputStream.readAllBytes());
+        }
+    }
+
+    public String saveEncodedFile(InputStream inputStream, String originalName) throws IOException {
         String[] fileNameParts = originalName.split("\\.");
         String extension = "."+fileNameParts[fileNameParts.length-1];
         String encodedName = Base64.getEncoder().encodeToString(originalName.getBytes(StandardCharsets.UTF_8));

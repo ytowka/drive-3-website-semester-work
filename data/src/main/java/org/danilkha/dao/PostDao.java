@@ -19,6 +19,8 @@ public interface PostDao {
 
     List<PostEntity> getPostByUserList(List<UUID> userIds, int from, int limit) throws SQLException;
 
+    List<PostEntity> getPostList(int from, int limit) throws SQLException;
+
     List<PostEntity> getPostByTopic(UUID topicId) throws SQLException;
 
     Optional<PostEntity> getPostById(UUID postId) throws SQLException;
@@ -32,6 +34,10 @@ public interface PostDao {
         //language=SQL
         String GET_BY_USERS = "SELECT id, datetime, author_id, topic_id, picture_url, content FROM posts " +
                 "WHERE author_id IN (%s) " +
+                "ORDER BY datetime DESC OFFSET ? LIMIT ?";
+
+        //language=SQL
+        String GET_ALL = "SELECT id, datetime, author_id, topic_id, picture_url, content FROM posts " +
                 "ORDER BY datetime DESC OFFSET ? LIMIT ?";
 
         //language=SQL
@@ -66,6 +72,15 @@ public interface PostDao {
             }
             statement.setInt(userIds.size() + 1, from);
             statement.setInt(userIds.size() + 2, limit);
+            ResultSet resultSet = statement.executeQuery();
+            return ORM.parseResultSetList(resultSet, PostEntity.class);
+        }
+
+        @Override
+        public List<PostEntity> getPostList(int from, int limit) throws SQLException {
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(GET_ALL);
+            statement.setInt(1, from);
+            statement.setInt(2, limit);
             ResultSet resultSet = statement.executeQuery();
             return ORM.parseResultSetList(resultSet, PostEntity.class);
         }

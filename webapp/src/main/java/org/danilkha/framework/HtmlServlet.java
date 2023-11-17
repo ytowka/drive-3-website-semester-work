@@ -21,13 +21,10 @@ import java.util.Map;
 
 public abstract class HtmlServlet extends HttpServlet {
 
-    private UserService userService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        userService = (UserService) config.getServletContext().getAttribute(ServiceLocator.USER_SERVICE);
-    }
+        super.init(config);}
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -39,8 +36,7 @@ public abstract class HtmlServlet extends HttpServlet {
         UserDto userDto = (UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
         root.put("isUserLoggedIn", userDto != null);
         if(userDto != null){
-            String avatarUri = userDto.avatarUri();
-            root.put("userAvatar", userService.getUserAvatarPath(avatarUri));
+            root.put("userAvatar", userDto.avatarUri());
         }
         Template template = buildPage(req, freemarkerCfg, root);
         try {

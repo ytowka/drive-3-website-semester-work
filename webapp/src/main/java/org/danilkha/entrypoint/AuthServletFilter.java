@@ -20,7 +20,7 @@ public class AuthServletFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         AuthenticationService authenticationService = (AuthenticationService) getServletContext().getAttribute(ServiceLocator.AUTH_SERVICE);
-        UserDto currentUser = (UserDto) req.getSession().getAttribute(USER_ATTRIBUTE);
+        UserDto currentUser = (UserDto) req.getSession(true).getAttribute(USER_ATTRIBUTE);
         if(currentUser != null){
             chain.doFilter(req, res);
             return;
@@ -29,6 +29,7 @@ public class AuthServletFilter extends HttpFilter {
             if(cookie.getName().equals(COOKIE_CREDENTIALS)){
                 Result<UserDto> result = authenticationService.fastAuth(cookie.getValue());
                 if(result instanceof Result.Success<UserDto> success){
+                    currentUser = ((Result.Success<UserDto>) result).getData();
                     req.getSession().setAttribute(USER_ATTRIBUTE, success.getData());
                     break;
                 }else{
@@ -36,6 +37,7 @@ public class AuthServletFilter extends HttpFilter {
 
             }
         }
+        System.out.println(currentUser);
         chain.doFilter(req, res);
     }
 }

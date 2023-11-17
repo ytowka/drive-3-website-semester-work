@@ -24,17 +24,18 @@ public interface CommentsDao {
         }
 
         //language=SQL
-        private static final String GET_BY_POST_ID = "SELECT * FROM comments WHERE post_id = ?";
+        private static final String GET_BY_POST_ID = "SELECT * FROM comments WHERE post_id = ? order by date desc";
 
         @Override
         public void writeComment(CommentEntity commentEntity) throws SQLException {
             PreparedStatement statement = Insertion.prepareInsertStatement(connectionProvider.provide(), commentEntity);
-            statement.execute();
+            statement.executeQuery();
         }
 
         @Override
         public List<CommentEntity> getPostComments(UUID postId) throws SQLException {
             PreparedStatement statement = connectionProvider.provide().prepareStatement(GET_BY_POST_ID);
+            statement.setObject(1, postId);
             ResultSet resultSet = statement.executeQuery();
             return ORM.parseResultSetList(resultSet, CommentEntity.class);
         }

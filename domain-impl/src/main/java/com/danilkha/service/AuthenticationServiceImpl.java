@@ -24,14 +24,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final PasswordEncoder passwordEncoder;
 
+    private final String basePicturePath;
+
     public AuthenticationServiceImpl(
             UserDao userDao,
             FileProvider userAvatarFileProvider,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            String basePicturePath
     ){
         this.userDao = userDao;
         this.userAvatarFileProvider = userAvatarFileProvider;
         this.passwordEncoder = passwordEncoder;
+        this.basePicturePath = basePicturePath;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         try {
             if(avatarPicture != null){
                 try {
-                    avatarFileName = userAvatarFileProvider.saveFile(avatarPicture, username+"-"+fileName);
+                    avatarFileName = userAvatarFileProvider.saveEncodedFile(avatarPicture, username+"-"+fileName);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -72,7 +76,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     surname,
                     email,
                     encodedPassword,
-                    userAvatarFileProvider.getBasePath()+"/"+avatarFileName,
+                    basePicturePath+"/"+avatarFileName,
                     date
             ));
 
@@ -95,7 +99,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 byte[] passwordDecoded = passwordEncoder.decodePassword(userEntity.encodedPasswordHash());
                 boolean isPasswordCorrect = Arrays.equals(passwordDecoded, passwordEncoder.hashPassword(password));
                 if(isPasswordCorrect){
-                    return new Result.Success<>(userEntity.toDto(userAvatarFileProvider.getBasePath()));
+                    return new Result.Success<>(userEntity.toDto(basePicturePath));
                 }
             }
             return new Result.Error<>("wrong credentials");
@@ -112,7 +116,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String password = credentials[1];
             UserEntity userEntity = userDao.getByUsername(login);
             if(userEntity.encodedPasswordHash().equals(password)){
-                return new Result.Success<>(userEntity.toDto(userAvatarFileProvider.getBasePath()));
+                return new Result.Success<>(userEntity.toDto(basePicturePath));
             }else{
                 return new Result.Error<>("wrong cookies");
             }
