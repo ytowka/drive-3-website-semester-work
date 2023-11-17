@@ -21,6 +21,7 @@ function onSubscribeClick(){
             }else{
                 subscribersCount++
             }
+            isSubscribed = !isSubscribed
             subscribersCountElem.innerText = `Подписчики: ${subscribersCount}`
         },
         error: function() {
