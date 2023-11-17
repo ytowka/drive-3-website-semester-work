@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -50,15 +51,27 @@ public class ProfileServlet extends HtmlServlet {
 
 
         UserDto user = userService.getUserById(UUID.fromString(userId));
+        List<UserDto> subscribers = subscriptionsService.getSubscribers(user.id());
+
+        boolean isSubscribed = false;
+        if(currentUser != null){
+            for (UserDto subscriber : subscribers) {
+                if(subscriber.id().equals(currentUser.id())){
+                    isSubscribed = true;
+                    break;
+                }
+            }
+        }
 
         root.put("feedApiPath", "http://localhost:8080%s/api/feed".formatted(getServletContext().getContextPath()));
         root.put("isCurrentUser", isCurrentUser);
         root.put("subscriptionsCount", subscriptionsService.getSubscriptions(user.id()).size());
-        root.put("subscribersCount", subscriptionsService.getSubscribers(user.id()).size());
+        root.put("subscribersCount", subscribers.size());
         root.put("username", userId);
         root.put("user", user);
         root.put("isLoggedIn", currentUser != null);
         root.put("regDate", DateFormatter.formatDate(user.registrationDate()));
+        root.put("isSubscribed", isSubscribed);
         return freemarkerCfg.getTemplate("profile/profile.ftl");
     }
 }

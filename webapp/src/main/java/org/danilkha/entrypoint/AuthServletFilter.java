@@ -6,10 +6,7 @@ import org.danilkha.services.AuthenticationService;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpFilter;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.*;
 import java.io.IOException;
 
 public class AuthServletFilter extends HttpFilter {
@@ -20,7 +17,8 @@ public class AuthServletFilter extends HttpFilter {
     @Override
     protected void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         AuthenticationService authenticationService = (AuthenticationService) getServletContext().getAttribute(ServiceLocator.AUTH_SERVICE);
-        UserDto currentUser = (UserDto) req.getSession(true).getAttribute(USER_ATTRIBUTE);
+        HttpSession session = req.getSession(true);
+        UserDto currentUser = (UserDto) session.getAttribute(USER_ATTRIBUTE);
         if(currentUser != null){
             chain.doFilter(req, res);
             return;
@@ -30,7 +28,7 @@ public class AuthServletFilter extends HttpFilter {
                 Result<UserDto> result = authenticationService.fastAuth(cookie.getValue());
                 if(result instanceof Result.Success<UserDto> success){
                     currentUser = ((Result.Success<UserDto>) result).getData();
-                    req.getSession().setAttribute(USER_ATTRIBUTE, success.getData());
+                    session.setAttribute(USER_ATTRIBUTE, success.getData());
                     break;
                 }else{
                 }

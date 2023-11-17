@@ -25,6 +25,7 @@ function loadPosts(url) {
                         postElement.style.justifyContent = 'center'
                         postElement.style.padding = '0'
                         postElement.style.margin = '0'
+                        postElement.style.width = '100%'
 
                         let likeIconClass = ""
 
@@ -81,11 +82,11 @@ function loadUserPosts(url, id) {
                 if (object.posts.length > 0) {
                     object.posts.forEach((post) => {
                         let postElement = document.createElement('div');
+                        postElement.style.width = '100%'
                         postElement.style.display = 'flex'
                         postElement.style.justifyContent = 'center'
                         postElement.style.padding = '0'
                         postElement.style.margin = '0'
-                        postElement.style.width = '100%'
 
                         let likeIconClass = ""
 

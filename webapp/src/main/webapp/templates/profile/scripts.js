@@ -1,20 +1,30 @@
-function onSubscribeClick(){
-    let isSubscribed = $(this).text() === 'Отписаться';
+const subscribersCountElem = document.getElementById("subscribers-count");
 
-    // Отправка AJAX-запроса и изменение состояния кнопки
+function onSubscribeClick(){
+
+
     $.ajax({
-        url: '/user/profile-api', // Ваш путь к API
-        method: 'PATCH',
-        data: {subscribe: !isSubscribed}, // Передача состояния подписки
+        url: `${contextPath}/api/subscribe`,
+        method: 'POST',
+        data: {
+            userId: userId,
+            subscribe: !isSubscribed,
+        },
         success: function() {
             if (isSubscribed) {
-                $('#subscribeButton').text('Подписаться').css('background-color', '');
+                $('#subscribeButton').text('Подписаться').css('background-color', 'cornflowerblue');
             } else {
                 $('#subscribeButton').text('Отписаться').css('background-color', 'grey');
             }
+            if(isSubscribed){
+                subscribersCount--
+            }else{
+                subscribersCount++
+            }
+            subscribersCountElem.innerText = `Подписчики: ${subscribersCount}`
         },
         error: function() {
-            // Обработка ошибки при отправке запроса
+
         }
     });
 }

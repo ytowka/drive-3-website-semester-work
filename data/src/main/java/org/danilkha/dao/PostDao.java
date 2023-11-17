@@ -47,7 +47,7 @@ public interface PostDao {
         String GET_BY_ID = "SELECT * FROM posts WHERE id = ?";
 
         //language=SQL
-        String GET_BY_AUTHOR = "SELECT * FROM posts WHERE author_id = ?";
+        String GET_BY_AUTHOR = "SELECT * FROM posts WHERE author_id = ? order by datetime desc ";
 
         public Impl(ConnectionProvider connectionProvider) {
             this.connectionProvider = connectionProvider;

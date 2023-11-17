@@ -5,6 +5,8 @@
         const contextPath = "${contextPath}"
         const feedApiPath = "${feedApiPath}"
         const userId = "${user.id()}"
+        let isSubscribed = ${isSubscribed?c}
+        let subscribersCount = ${subscribersCount}
     </script>
 
     <div class="container">
@@ -16,7 +18,11 @@
                         <div class="username">
                             <h1>${user.username()}</h1>
                               <#if !isCurrentUser && isLoggedIn>
-                                  <button id="subscribeButton" onclick="onSubscribeClick()">Подписаться</button>
+                                  <#if isSubscribed>
+                                      <button id="subscribeButton" style="background-color: rgb(128,128,128);" onclick="onSubscribeClick()">Отписаться</button>
+                                  <#else>
+                                      <button id="subscribeButton" onclick="onSubscribeClick()">Подписаться</button>
+                                  </#if>
                               </#if>
                         </div>
                         <#if isCurrentUser>
@@ -27,7 +33,7 @@
                         <#else>
                             <div class="subs-buttons">
                                 <p>Подписки: ${subscriptionsCount}</p>
-                                <p>Подписчики: ${subscribersCount}</p>
+                                <p id="subscribers-count">Подписчики: ${subscribersCount}</p>
                             </div>
                         </#if>
                     </div>
