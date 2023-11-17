@@ -22,17 +22,14 @@ public class SubscriptionServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("init SubscriptionServlet");
         subscriptionsService = (SubscriptionsService) config.getServletContext().getAttribute(ServiceLocator.SUBSCRIPTIONS_SERVICE);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("subscribe");
         UUID userId = UUID.fromString(req.getParameter("userId"));
         boolean subscribe = Boolean.parseBoolean(req.getParameter("subscribe"));
         UUID currentUser = ((UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id();
-        System.out.println("subscribe "+userId+" "+subscribe+" "+currentUser );
         resp.setStatus(HttpServletResponse.SC_OK);
         if(subscribe){
             subscriptionsService.subscribeUser(currentUser, userId);

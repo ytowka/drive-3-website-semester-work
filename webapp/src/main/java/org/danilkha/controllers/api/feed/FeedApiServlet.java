@@ -47,29 +47,23 @@ public class FeedApiServlet extends HttpServlet {
         String topic = req.getParameter("topic");
         String userId = req.getParameter("userId");
 
+
         List<PostDto> postsDtos;
-        if(topic != null){
-            System.out.println("get topic posts "+topic);
+        if(topic != null && !topic.isBlank()){
             postsDtos = postsService.getPostsByTopic(topic);
         } else if (userId != null) {
-            System.out.println("get user posts "+userId);
             postsDtos = postsService.getUserPosts(UUID.fromString(userId));
         } else{
             page = Integer.parseInt(req.getParameter("page"));
             if(userDto != null){
-                System.out.println("get feed posts "+userDto.id());
                 postsDtos = postsService.getUserFeed(userDto.id(), page);
-                System.out.println("got user feed "+postsDtos.size());
             }else{
-                System.out.println("get all posts");
                 postsDtos = postsService.getAllFeed(page);
             }
 
         }
 
-        System.out.println("map to response");
         List<PostResponse> postsResponse = mapToResponse(postsDtos, userDto, basePage);
-        System.out.println("mapped to response");
         PostListResponse response = new PostListResponse(
                 page,
                 postsResponse
@@ -80,7 +74,6 @@ public class FeedApiServlet extends HttpServlet {
     private List<PostResponse> mapToResponse(List<PostDto> postDtos, UserDto userDto, String basePage){
         return postDtos.stream().map(postDto -> {
             List<UUID> postLikes =  postsService.getPostLikes(postDto.id());
-            System.out.println("get post likes "+postLikes.size());
             boolean isLiked = false;
             if(userDto != null){
                 isLiked = postLikes.contains(userDto.id());

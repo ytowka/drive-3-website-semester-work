@@ -12,7 +12,7 @@ function onLike(){
     }
 
     $.ajax({
-        url: `http://localhost:8080/${contextPath}/api/like`,
+        url: `${contextPath}/api/like`,
         method: 'POST',
         contentType: "application/x-www-form-urlencoded",
         data: {

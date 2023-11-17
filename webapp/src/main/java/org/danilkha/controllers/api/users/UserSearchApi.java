@@ -2,6 +2,7 @@ package org.danilkha.controllers.api.users;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.danilkha.dto.UserDto;
+import org.danilkha.entrypoint.AuthServletFilter;
 import org.danilkha.entrypoint.ServiceLocator;
 import org.danilkha.services.SubscriptionsService;
 import org.danilkha.services.UserService;
@@ -34,9 +35,7 @@ public class UserSearchApi extends HttpServlet {
         super.init(config);
 
         userService = (UserService) getServletContext().getAttribute(ServiceLocator.USER_SERVICE);
-
-
-
+        subscriptionsService = (SubscriptionsService) getServletContext().getAttribute(ServiceLocator.SUBSCRIPTIONS_SERVICE);
     }
 
     @Override
@@ -46,16 +45,16 @@ public class UserSearchApi extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         String mode = req.getParameter("mode");
         String query = req.getParameter("query");
+        UUID userId = ((UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id();
         switch (mode){
             case SEARCH_MODE ->{
                 users = mapUsers(userService.searchUser(query));
             }
             case SUBSCRIPTIONS_MODE -> {
-                UUID userId = UUID.fromString(req.getParameter("userId"));
-                users = mapUsers(subscriptionsService.getSubscriptions(userId));
+                List<UserDto> userDtos = subscriptionsService.getSubscriptions(userId);
+                users = mapUsers(userDtos);
             }
             case SUBSCRIBERS_MODE -> {
-                UUID userId = UUID.fromString(req.getParameter("userId"));
                 users = mapUsers(subscriptionsService.getSubscribers(userId));
             }
         }

@@ -35,7 +35,6 @@ public class AuthServletFilter extends HttpFilter {
 
             }
         }
-        System.out.println(currentUser);
         chain.doFilter(req, res);
     }
 }

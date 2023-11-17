@@ -87,7 +87,6 @@ public interface UserDao {
 
         @Override
         public List<UserEntity> search(String query) throws SQLException {
-            System.out.println("dao search "+query);
             PreparedStatement statement = connectionProvider.provide().prepareStatement(SEARCH_QUERY);
             String sqlQuery = "%"+query+"%";
             statement.setObject(1, sqlQuery);

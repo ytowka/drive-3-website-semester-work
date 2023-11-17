@@ -4,6 +4,7 @@
     <script>
         const contextPath = "${contextPath}"
         const apiPath = "${apiPath}"
+        console.log("Подписчики")
     </script>
     <div class="content">
         <h1 class="title">Подписчики</h1>

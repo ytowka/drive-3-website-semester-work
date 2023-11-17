@@ -72,7 +72,6 @@ public class NewPostServlet extends HtmlServlet {
                 picture = part.getInputStream();
                 fileName = MultipartUtils.getFileName(part);
             }
-            System.out.println("file: "+fileName);
             String topicId = req.getParameter("topic");
             String text = req.getParameter("text");
             UserDto currentUser = (UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE);
@@ -87,6 +86,5 @@ public class NewPostServlet extends HtmlServlet {
         }catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("new post ");
     }
 }

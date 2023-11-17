@@ -29,17 +29,13 @@ public class LikesApiServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("do like");
         UUID postId = UUID.fromString(req.getParameter("postId"));
         UUID userId = UUID.fromString(req.getParameter("userId"));
         boolean isLiked = Boolean.parseBoolean(req.getParameter("isLiked"));
-        System.out.println("read");
-        System.out.println(userId);
         postsService.changeLikeState(
                 postId,
                 userId,
                 isLiked
         );
-        System.out.println(postId+" "+isLiked+" "+ userId);
     }
 }

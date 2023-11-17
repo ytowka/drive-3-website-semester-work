@@ -29,9 +29,6 @@ public class CommentApiServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        System.out.println("new comment"+req.getParameter("text"));
-        System.out.println(req.getParameter("postId"));
-        System.out.println(((UserDto)req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id());
         postsService.addComment(
                 UUID.fromString(req.getParameter("postId")),
                 ((UserDto)req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id(),

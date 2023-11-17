@@ -3,6 +3,7 @@ const userList = document.getElementById('user-list')
 function loadUsers(
     url, query
 ){
+    console.log("load users" +apiPath)
     $.ajax({
         url: url,
         method: 'GET',
@@ -42,9 +43,9 @@ function createUserCard(
     `
 }
 
+loadUsers(apiPath, "")
+
 document.getElementById("search-query").addEventListener('input', function (evt){
     loadUsers(apiPath, evt.target.value)
     console.log("search: "+evt.target.value)
 })
-
-loadUsers(apiPath, "")

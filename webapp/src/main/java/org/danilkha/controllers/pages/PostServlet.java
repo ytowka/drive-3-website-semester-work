@@ -45,8 +45,6 @@ public class PostServlet extends HtmlServlet {
         boolean isLiked = false;
 
         if(userDto != null){
-            System.out.println(likes);
-            System.out.println(isLiked);
             isLiked = likes.contains(userDto.id());
         }
 
@@ -76,7 +74,6 @@ public class PostServlet extends HtmlServlet {
             root.put("userId", userDto.id());
         }
 
-        System.out.println("post id" +postId);
 
         List<CommentResponse> commentDtoList = postsService.getPostComments(UUID.fromString(postId)).stream().map(commentDto ->{
             return new CommentResponse(
@@ -88,7 +85,6 @@ public class PostServlet extends HtmlServlet {
             );
         }).toList();
 
-        System.out.println(commentDtoList.size());
 
 
         root.put("comments", commentDtoList);

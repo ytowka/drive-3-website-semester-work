@@ -12,7 +12,8 @@ function loadPosts(url) {
             url: url,
             method: 'GET',
             data: {
-                page: loadingPage
+                page: loadingPage,
+                topic: topic,
             },
             success: function(data) {
                 let object = JSON.parse(data)
@@ -142,7 +143,7 @@ function onLike(id){
         }
         likeMap.set(id, !isLiked)
         $.ajax({
-            url: `http://localhost:8080/${contextPath}/api/like`,
+            url: `${contextPath}/api/like`,
             method: 'POST',
             contentType: "application/x-www-form-urlencoded",
             data: {

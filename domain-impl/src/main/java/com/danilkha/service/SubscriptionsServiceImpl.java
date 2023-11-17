@@ -61,6 +61,7 @@ public class SubscriptionsServiceImpl implements SubscriptionsService {
                     .map(userEntity -> userEntity.toDto(baseAvatarPath))
                     .collect(Collectors.toList());
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
