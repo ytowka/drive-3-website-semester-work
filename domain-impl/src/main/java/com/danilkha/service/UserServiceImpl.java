@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserService {
                     .map(userEntity -> userEntity.toDto(picturesBasePath))
                     .toList();
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
     }

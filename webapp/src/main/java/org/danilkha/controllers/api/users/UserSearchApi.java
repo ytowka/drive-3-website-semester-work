@@ -45,16 +45,18 @@ public class UserSearchApi extends HttpServlet {
         resp.setCharacterEncoding("UTF-8");
         String mode = req.getParameter("mode");
         String query = req.getParameter("query");
-        UUID userId = ((UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id();
+
         switch (mode){
             case SEARCH_MODE ->{
                 users = mapUsers(userService.searchUser(query));
             }
             case SUBSCRIPTIONS_MODE -> {
+                UUID userId = ((UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id();
                 List<UserDto> userDtos = subscriptionsService.getSubscriptions(userId);
                 users = mapUsers(userDtos);
             }
             case SUBSCRIBERS_MODE -> {
+                UUID userId = ((UserDto) req.getSession().getAttribute(AuthServletFilter.USER_ATTRIBUTE)).id();
                 users = mapUsers(subscriptionsService.getSubscribers(userId));
             }
         }
