@@ -5,6 +5,7 @@
         const contextPath = "${contextPath}"
         const feedApiPath = "${feedApiPath}"
         const userId = "${userId!''}"
+        const topic = "${topic!''}"
     </script>
     <div class="container">
         <#if topic?has_content>

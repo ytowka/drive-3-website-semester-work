@@ -47,8 +47,10 @@ public class FeedApiServlet extends HttpServlet {
         String topic = req.getParameter("topic");
         String userId = req.getParameter("userId");
 
+        System.out.println("topic "+topic);
+
         List<PostDto> postsDtos;
-        if(topic != null){
+        if(topic != null && !topic.isBlank()){
             System.out.println("get topic posts "+topic);
             postsDtos = postsService.getPostsByTopic(topic);
         } else if (userId != null) {

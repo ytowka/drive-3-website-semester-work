@@ -73,7 +73,7 @@ public interface SubscriptionsDao {
 
         @Override
         public List<UUID> getSubscriptionsIds(UUID userId) throws SQLException {
-            PreparedStatement statement = connectionProvider.provide().prepareStatement(GET_SUBSCRIPTIONS);
+            PreparedStatement statement = connectionProvider.provide().prepareStatement(GET_SUBSCRIPTIONS_IDS);
             statement.setObject(1, userId);
             ResultSet resultSet = statement.executeQuery();
             List<UUID> ids = new ArrayList<>();
